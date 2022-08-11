@@ -51,7 +51,7 @@ func CmdQueryRegisteredQuery() *cobra.Command {
 				return fmt.Errorf("failed to parse query id: %w", err)
 			}
 
-			res, err := queryClient.RegisteredQuery(context.Background(), &types.QueryRegisteredQueryRequest{QueryId: queryID})
+			res, err := queryClient.RegisteredKVQuery(context.Background(), &types.QueryRegisteredKVQueryRequest{QueryId: queryID})
 			if err != nil {
 				return err
 			}
@@ -75,7 +75,7 @@ func CmdQueryRegisteredQueries() *cobra.Command {
 
 			queryClient := types.NewQueryClient(clientCtx)
 
-			res, err := queryClient.RegisteredQueries(context.Background(), &types.QueryRegisteredQueriesRequest{})
+			res, err := queryClient.RegisteredKVQueries(context.Background(), &types.QueryRegisteredKVQueriesRequest{})
 			if err != nil {
 				return err
 			}
@@ -104,7 +104,7 @@ func CmdQueryRegisteredQueryResult() *cobra.Command {
 				return fmt.Errorf("failed to parse query id: %w", err)
 			}
 
-			res, err := queryClient.QueryResult(context.Background(), &types.QueryRegisteredQueryResultRequest{QueryId: queryID})
+			res, err := queryClient.KVQueryResult(context.Background(), &types.QueryRegisteredKVQueryResultRequest{QueryId: queryID})
 			if err != nil {
 				return err
 			}

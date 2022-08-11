@@ -9,7 +9,7 @@ import (
 )
 
 func RegisterCodec(cdc *codec.LegacyAmino) {
-	cdc.RegisterConcrete(&MsgRegisterInterchainQuery{}, "interchainqueries/RegisterQuery", nil)
+	cdc.RegisterConcrete(&MsgRegisterInterchainKVQuery{}, "interchainqueries/RegisterQuery", nil)
 	// this line is used by starport scaffolding # 2
 }
 

@@ -17,7 +17,7 @@ func (k Keeper) EndBlocker(ctx sdk.Context) {
 	events := sdk.Events{}
 
 	// emit events for periodic queries
-	k.IterateRegisteredQueries(ctx, func(_ int64, registeredQuery types.RegisteredQuery) (stop bool) {
+	k.IterateRegisteredKVQueries(ctx, func(_ int64, registeredQuery types.RegisteredKVQuery) (stop bool) {
 		if uint64(ctx.BlockHeight()) >= registeredQuery.LastEmittedHeight+registeredQuery.UpdatePeriod {
 			k.Logger(ctx).Debug("EnddBlocker: interchainquery event emitted", "id", registeredQuery.Id)
 			event := sdk.NewEvent(
@@ -27,13 +27,11 @@ func (k Keeper) EndBlocker(ctx sdk.Context) {
 				sdk.NewAttribute(types.AttributeKeyQueryID, strconv.FormatUint(registeredQuery.Id, 10)),
 				sdk.NewAttribute(types.AttributeKeyOwner, registeredQuery.Owner),
 				sdk.NewAttribute(types.AttributeKeyZoneID, registeredQuery.ZoneId),
-				sdk.NewAttribute(types.AttributeKeyQueryType, registeredQuery.QueryType),
-				sdk.NewAttribute(types.AttributeTransactionsFilterQuery, registeredQuery.TransactionsFilter),
 				sdk.NewAttribute(types.AttributeKeyKVQuery, types.KVKeys(registeredQuery.Keys).String()),
 			)
 			events = append(events, event)
 			registeredQuery.LastEmittedHeight = uint64(ctx.BlockHeight())
-			if err := k.SaveQuery(ctx, registeredQuery); err != nil {
+			if err := k.SaveKVQuery(ctx, registeredQuery); err != nil {
 				k.Logger(ctx).Error("EndBlocker: failed to save query", "error", err)
 			}
 			k.Logger(ctx).Debug("EndBlocker: event successfully added to events list", "id", registeredQuery)

@@ -19,12 +19,12 @@ func NewHandler(k keeper.Keeper) sdk.Handler {
 		ctx = ctx.WithEventManager(sdk.NewEventManager())
 
 		switch msg := msg.(type) {
-		case *types.MsgRegisterInterchainQuery:
-			res, err := msgServer.RegisterInterchainQuery(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgRegisterInterchainKVQuery:
+			res, err := msgServer.RegisterInterchainKVQuery(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 
-		case *types.MsgSubmitQueryResult:
-			res, err := msgServer.SubmitQueryResult(sdk.WrapSDKContext(ctx), msg)
+		case *types.MsgSubmitKVQueryResult:
+			res, err := msgServer.SubmitKVQueryResult(sdk.WrapSDKContext(ctx), msg)
 			return sdk.WrapServiceResult(ctx, res, err)
 
 		default:

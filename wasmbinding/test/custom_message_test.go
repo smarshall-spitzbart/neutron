@@ -61,7 +61,7 @@ func (suite *CustomMessengerTestSuite) TestRegisterInterchainQuery() {
 	messenger := wasmbinding.CustomMessenger{}
 	messenger.Icqmsgserver = icqkeeper.NewMsgServerImpl(neutron.InterchainQueriesKeeper)
 
-	// Craft RegisterInterchainQuery message
+	// Craft RegisterInterchainKVQuery message
 	clientKey := host.FullClientStateKey(suite.Path.EndpointB.ClientID)
 	updatePeriod := uint64(20)
 
@@ -83,7 +83,7 @@ func (suite *CustomMessengerTestSuite) TestRegisterInterchainQuery() {
 	msg, err := json.Marshal(fullMsg)
 	suite.NoError(err)
 
-	// Dispatch RegisterInterchainQuery message
+	// Dispatch RegisterInterchainKVQuery message
 	owner, err := sdk.AccAddressFromBech32(testutil.TestOwnerAddress)
 	suite.NoError(err)
 	events, data, err := messenger.DispatchMsg(ctx, owner, suite.Path.EndpointA.ChannelConfig.PortID, types.CosmosMsg{

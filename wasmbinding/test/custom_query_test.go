@@ -37,21 +37,20 @@ func (suite *CustomQuerierTestSuite) TestInterchainQueryResult() {
 
 	// Register and submit query result
 	clientKey := host.FullClientStateKey(suite.Path.EndpointB.ClientID)
-	lastID := neutron.InterchainQueriesKeeper.GetLastRegisteredQueryKey(ctx) + 1
-	neutron.InterchainQueriesKeeper.SetLastRegisteredQueryKey(ctx, lastID)
-	registeredQuery := icqtypes.RegisteredQuery{
+	lastID := neutron.InterchainQueriesKeeper.GetLastRegisteredKVQueryKey(ctx) + 1
+	neutron.InterchainQueriesKeeper.SetLastRegisteredKVQueryKey(ctx, lastID)
+	registeredQuery := icqtypes.RegisteredKVQuery{
 		Id: lastID,
 		Keys: []*icqtypes.KVKey{
 			{Path: host.StoreKey, Key: clientKey},
 		},
-		QueryType:         icqtypes.InterchainQueryTypeKV,
 		ZoneId:            "osmosis",
 		UpdatePeriod:      1,
 		ConnectionId:      suite.Path.EndpointA.ConnectionID,
 		LastEmittedHeight: uint64(ctx.BlockHeight()),
 	}
-	neutron.InterchainQueriesKeeper.SetLastRegisteredQueryKey(ctx, lastID)
-	err := neutron.InterchainQueriesKeeper.SaveQuery(ctx, registeredQuery)
+	neutron.InterchainQueriesKeeper.SetLastRegisteredKVQueryKey(ctx, lastID)
+	err := neutron.InterchainQueriesKeeper.SaveKVQuery(ctx, registeredQuery)
 	suite.Require().NoError(err)
 
 	chainBResp := suite.ChainB.App.Query(abci.RequestQuery{
@@ -68,8 +67,6 @@ func (suite *CustomQuerierTestSuite) TestInterchainQueryResult() {
 			Value:         chainBResp.Value,
 			StoragePrefix: host.StoreKey,
 		}},
-		// we don't have tests to test transactions proofs verification since it's a tendermint layer, and we don't have access to it here
-		Block:    nil,
 		Height:   uint64(chainBResp.Height),
 		Revision: suite.ChainA.LastHeader.GetHeight().GetRevisionNumber(),
 	}
@@ -82,13 +79,12 @@ func (suite *CustomQuerierTestSuite) TestInterchainQueryResult() {
 			QueryId: lastID,
 		},
 	}
-	resp := icqtypes.QueryRegisteredQueryResultResponse{}
+	resp := icqtypes.QueryRegisteredKVQueryResultResponse{}
 	err = suite.queryCustom(ctx, contractAddress, query, &resp)
 	suite.Require().NoError(err)
 
 	suite.Require().Equal(uint64(chainBResp.Height), resp.Result.Height)
 	suite.Require().Equal(suite.ChainA.LastHeader.GetHeight().GetRevisionNumber(), resp.Result.Revision)
-	suite.Require().Empty(resp.Result.Block)
 	suite.Require().NotEmpty(resp.Result.KvResults)
 	suite.Require().Equal([]*icqtypes.StorageValue{{
 		Key:           chainBResp.Key,
@@ -115,7 +111,7 @@ func (suite *CustomQuerierTestSuite) TestInterchainQueryResultNotFound() {
 			QueryId: 1,
 		},
 	}
-	resp := icqtypes.QueryRegisteredQueryResultResponse{}
+	resp := icqtypes.QueryRegisteredKVQueryResultResponse{}
 	err := suite.queryCustom(ctx, contractAddress, query, &resp)
 	expectedErrMag := "Generic error: Querier contract error: codespace: interchainqueries, code: 1115: query wasm contract failed"
 	suite.Require().Errorf(err, expectedErrMag)

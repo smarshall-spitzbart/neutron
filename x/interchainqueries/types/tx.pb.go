@@ -30,35 +30,31 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.GoGoProtoPackageIsVersion3 // please upgrade the proto package
 
-type MsgRegisterInterchainQuery struct {
-	// defines a query type: `kv` or `tx` now
-	QueryType string `protobuf:"bytes,1,opt,name=query_type,json=queryType,proto3" json:"query_type,omitempty"`
+type MsgRegisterInterchainKVQuery struct {
 	// is used to define KV-storage keys for which we want to get values from remote chain
-	Keys []*KVKey `protobuf:"bytes,2,rep,name=keys,proto3" json:"keys,omitempty"`
-	// is used to define a filter for transaction search ICQ
-	TransactionsFilter string `protobuf:"bytes,3,opt,name=transactions_filter,json=transactionsFilter,proto3" json:"transactions_filter,omitempty"`
+	Keys []*KVKey `protobuf:"bytes,1,rep,name=keys,proto3" json:"keys,omitempty"`
 	// is used to identify the chain of interest
-	ZoneId string `protobuf:"bytes,4,opt,name=zone_id,json=zoneId,proto3" json:"zone_id,omitempty"`
+	ZoneId string `protobuf:"bytes,2,opt,name=zone_id,json=zoneId,proto3" json:"zone_id,omitempty"`
 	// is IBC connection ID for getting ConsensusState to verify proofs
-	ConnectionId string `protobuf:"bytes,5,opt,name=connection_id,json=connectionId,proto3" json:"connection_id,omitempty"`
+	ConnectionId string `protobuf:"bytes,3,opt,name=connection_id,json=connectionId,proto3" json:"connection_id,omitempty"`
 	// is used to say how often the query must be updated
-	UpdatePeriod uint64 `protobuf:"varint,6,opt,name=update_period,json=updatePeriod,proto3" json:"update_period,omitempty"`
+	UpdatePeriod uint64 `protobuf:"varint,4,opt,name=update_period,json=updatePeriod,proto3" json:"update_period,omitempty"`
 	// is the signer of the message
-	Sender string `protobuf:"bytes,7,opt,name=sender,proto3" json:"sender,omitempty"`
+	Sender string `protobuf:"bytes,5,opt,name=sender,proto3" json:"sender,omitempty"`
 }
 
-func (m *MsgRegisterInterchainQuery) Reset()         { *m = MsgRegisterInterchainQuery{} }
-func (m *MsgRegisterInterchainQuery) String() string { return proto.CompactTextString(m) }
-func (*MsgRegisterInterchainQuery) ProtoMessage()    {}
-func (*MsgRegisterInterchainQuery) Descriptor() ([]byte, []int) {
+func (m *MsgRegisterInterchainKVQuery) Reset()         { *m = MsgRegisterInterchainKVQuery{} }
+func (m *MsgRegisterInterchainKVQuery) String() string { return proto.CompactTextString(m) }
+func (*MsgRegisterInterchainKVQuery) ProtoMessage()    {}
+func (*MsgRegisterInterchainKVQuery) Descriptor() ([]byte, []int) {
 	return fileDescriptor_3f1f36ccf3a8e51d, []int{0}
 }
-func (m *MsgRegisterInterchainQuery) XXX_Unmarshal(b []byte) error {
+func (m *MsgRegisterInterchainKVQuery) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgRegisterInterchainQuery) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgRegisterInterchainKVQuery) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgRegisterInterchainQuery.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgRegisterInterchainKVQuery.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -68,61 +64,119 @@ func (m *MsgRegisterInterchainQuery) XXX_Marshal(b []byte, deterministic bool) (
 		return b[:n], nil
 	}
 }
-func (m *MsgRegisterInterchainQuery) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgRegisterInterchainQuery.Merge(m, src)
+func (m *MsgRegisterInterchainKVQuery) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRegisterInterchainKVQuery.Merge(m, src)
 }
-func (m *MsgRegisterInterchainQuery) XXX_Size() int {
+func (m *MsgRegisterInterchainKVQuery) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgRegisterInterchainQuery) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgRegisterInterchainQuery.DiscardUnknown(m)
+func (m *MsgRegisterInterchainKVQuery) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRegisterInterchainKVQuery.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgRegisterInterchainQuery proto.InternalMessageInfo
+var xxx_messageInfo_MsgRegisterInterchainKVQuery proto.InternalMessageInfo
 
-func (m *MsgRegisterInterchainQuery) GetQueryType() string {
-	if m != nil {
-		return m.QueryType
-	}
-	return ""
-}
-
-func (m *MsgRegisterInterchainQuery) GetKeys() []*KVKey {
+func (m *MsgRegisterInterchainKVQuery) GetKeys() []*KVKey {
 	if m != nil {
 		return m.Keys
 	}
 	return nil
 }
 
-func (m *MsgRegisterInterchainQuery) GetTransactionsFilter() string {
-	if m != nil {
-		return m.TransactionsFilter
-	}
-	return ""
-}
-
-func (m *MsgRegisterInterchainQuery) GetZoneId() string {
+func (m *MsgRegisterInterchainKVQuery) GetZoneId() string {
 	if m != nil {
 		return m.ZoneId
 	}
 	return ""
 }
 
-func (m *MsgRegisterInterchainQuery) GetConnectionId() string {
+func (m *MsgRegisterInterchainKVQuery) GetConnectionId() string {
 	if m != nil {
 		return m.ConnectionId
 	}
 	return ""
 }
 
-func (m *MsgRegisterInterchainQuery) GetUpdatePeriod() uint64 {
+func (m *MsgRegisterInterchainKVQuery) GetUpdatePeriod() uint64 {
 	if m != nil {
 		return m.UpdatePeriod
 	}
 	return 0
 }
 
-func (m *MsgRegisterInterchainQuery) GetSender() string {
+func (m *MsgRegisterInterchainKVQuery) GetSender() string {
+	if m != nil {
+		return m.Sender
+	}
+	return ""
+}
+
+type MsgRegisterInterchainTXQuery struct {
+	// is used to define a filter for transaction search ICQ
+	TransactionsFilter string `protobuf:"bytes,1,opt,name=transactions_filter,json=transactionsFilter,proto3" json:"transactions_filter,omitempty"`
+	// is used to identify the chain of interest
+	ZoneId string `protobuf:"bytes,2,opt,name=zone_id,json=zoneId,proto3" json:"zone_id,omitempty"`
+	// is IBC connection ID for getting ConsensusState to verify proofs
+	ConnectionId string `protobuf:"bytes,3,opt,name=connection_id,json=connectionId,proto3" json:"connection_id,omitempty"`
+	// is the signer of the message
+	Sender string `protobuf:"bytes,4,opt,name=sender,proto3" json:"sender,omitempty"`
+}
+
+func (m *MsgRegisterInterchainTXQuery) Reset()         { *m = MsgRegisterInterchainTXQuery{} }
+func (m *MsgRegisterInterchainTXQuery) String() string { return proto.CompactTextString(m) }
+func (*MsgRegisterInterchainTXQuery) ProtoMessage()    {}
+func (*MsgRegisterInterchainTXQuery) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3f1f36ccf3a8e51d, []int{1}
+}
+func (m *MsgRegisterInterchainTXQuery) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgRegisterInterchainTXQuery) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgRegisterInterchainTXQuery.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgRegisterInterchainTXQuery) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgRegisterInterchainTXQuery.Merge(m, src)
+}
+func (m *MsgRegisterInterchainTXQuery) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgRegisterInterchainTXQuery) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgRegisterInterchainTXQuery.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgRegisterInterchainTXQuery proto.InternalMessageInfo
+
+func (m *MsgRegisterInterchainTXQuery) GetTransactionsFilter() string {
+	if m != nil {
+		return m.TransactionsFilter
+	}
+	return ""
+}
+
+func (m *MsgRegisterInterchainTXQuery) GetZoneId() string {
+	if m != nil {
+		return m.ZoneId
+	}
+	return ""
+}
+
+func (m *MsgRegisterInterchainTXQuery) GetConnectionId() string {
+	if m != nil {
+		return m.ConnectionId
+	}
+	return ""
+}
+
+func (m *MsgRegisterInterchainTXQuery) GetSender() string {
 	if m != nil {
 		return m.Sender
 	}
@@ -137,7 +191,7 @@ func (m *MsgRegisterInterchainQueryResponse) Reset()         { *m = MsgRegisterI
 func (m *MsgRegisterInterchainQueryResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgRegisterInterchainQueryResponse) ProtoMessage()    {}
 func (*MsgRegisterInterchainQueryResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f1f36ccf3a8e51d, []int{1}
+	return fileDescriptor_3f1f36ccf3a8e51d, []int{2}
 }
 func (m *MsgRegisterInterchainQueryResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -173,26 +227,26 @@ func (m *MsgRegisterInterchainQueryResponse) GetId() uint64 {
 	return 0
 }
 
-type MsgSubmitQueryResult struct {
+type MsgSubmitTXQueryResult struct {
 	QueryId uint64 `protobuf:"varint,1,opt,name=query_id,json=queryId,proto3" json:"query_id,omitempty"`
 	Sender  string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
 	// is the IBC client ID for an IBC connection between Neutron chain and target chain (where the result was obtained from)
-	ClientId string       `protobuf:"bytes,3,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
-	Result   *QueryResult `protobuf:"bytes,4,opt,name=result,proto3" json:"result,omitempty"`
+	ClientId string `protobuf:"bytes,3,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
+	Block    *Block `protobuf:"bytes,4,opt,name=block,proto3" json:"block,omitempty"`
 }
 
-func (m *MsgSubmitQueryResult) Reset()         { *m = MsgSubmitQueryResult{} }
-func (m *MsgSubmitQueryResult) String() string { return proto.CompactTextString(m) }
-func (*MsgSubmitQueryResult) ProtoMessage()    {}
-func (*MsgSubmitQueryResult) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f1f36ccf3a8e51d, []int{2}
+func (m *MsgSubmitTXQueryResult) Reset()         { *m = MsgSubmitTXQueryResult{} }
+func (m *MsgSubmitTXQueryResult) String() string { return proto.CompactTextString(m) }
+func (*MsgSubmitTXQueryResult) ProtoMessage()    {}
+func (*MsgSubmitTXQueryResult) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3f1f36ccf3a8e51d, []int{3}
 }
-func (m *MsgSubmitQueryResult) XXX_Unmarshal(b []byte) error {
+func (m *MsgSubmitTXQueryResult) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
 }
-func (m *MsgSubmitQueryResult) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+func (m *MsgSubmitTXQueryResult) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
 	if deterministic {
-		return xxx_messageInfo_MsgSubmitQueryResult.Marshal(b, m, deterministic)
+		return xxx_messageInfo_MsgSubmitTXQueryResult.Marshal(b, m, deterministic)
 	} else {
 		b = b[:cap(b)]
 		n, err := m.MarshalToSizedBuffer(b)
@@ -202,40 +256,109 @@ func (m *MsgSubmitQueryResult) XXX_Marshal(b []byte, deterministic bool) ([]byte
 		return b[:n], nil
 	}
 }
-func (m *MsgSubmitQueryResult) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_MsgSubmitQueryResult.Merge(m, src)
+func (m *MsgSubmitTXQueryResult) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSubmitTXQueryResult.Merge(m, src)
 }
-func (m *MsgSubmitQueryResult) XXX_Size() int {
+func (m *MsgSubmitTXQueryResult) XXX_Size() int {
 	return m.Size()
 }
-func (m *MsgSubmitQueryResult) XXX_DiscardUnknown() {
-	xxx_messageInfo_MsgSubmitQueryResult.DiscardUnknown(m)
+func (m *MsgSubmitTXQueryResult) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSubmitTXQueryResult.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_MsgSubmitQueryResult proto.InternalMessageInfo
+var xxx_messageInfo_MsgSubmitTXQueryResult proto.InternalMessageInfo
 
-func (m *MsgSubmitQueryResult) GetQueryId() uint64 {
+func (m *MsgSubmitTXQueryResult) GetQueryId() uint64 {
 	if m != nil {
 		return m.QueryId
 	}
 	return 0
 }
 
-func (m *MsgSubmitQueryResult) GetSender() string {
+func (m *MsgSubmitTXQueryResult) GetSender() string {
 	if m != nil {
 		return m.Sender
 	}
 	return ""
 }
 
-func (m *MsgSubmitQueryResult) GetClientId() string {
+func (m *MsgSubmitTXQueryResult) GetClientId() string {
 	if m != nil {
 		return m.ClientId
 	}
 	return ""
 }
 
-func (m *MsgSubmitQueryResult) GetResult() *QueryResult {
+func (m *MsgSubmitTXQueryResult) GetBlock() *Block {
+	if m != nil {
+		return m.Block
+	}
+	return nil
+}
+
+type MsgSubmitKVQueryResult struct {
+	QueryId uint64 `protobuf:"varint,1,opt,name=query_id,json=queryId,proto3" json:"query_id,omitempty"`
+	Sender  string `protobuf:"bytes,2,opt,name=sender,proto3" json:"sender,omitempty"`
+	// is the IBC client ID for an IBC connection between Neutron chain and target chain (where the result was obtained from)
+	ClientId string       `protobuf:"bytes,3,opt,name=client_id,json=clientId,proto3" json:"client_id,omitempty"`
+	Result   *QueryResult `protobuf:"bytes,4,opt,name=result,proto3" json:"result,omitempty"`
+}
+
+func (m *MsgSubmitKVQueryResult) Reset()         { *m = MsgSubmitKVQueryResult{} }
+func (m *MsgSubmitKVQueryResult) String() string { return proto.CompactTextString(m) }
+func (*MsgSubmitKVQueryResult) ProtoMessage()    {}
+func (*MsgSubmitKVQueryResult) Descriptor() ([]byte, []int) {
+	return fileDescriptor_3f1f36ccf3a8e51d, []int{4}
+}
+func (m *MsgSubmitKVQueryResult) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *MsgSubmitKVQueryResult) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_MsgSubmitKVQueryResult.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalToSizedBuffer(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *MsgSubmitKVQueryResult) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_MsgSubmitKVQueryResult.Merge(m, src)
+}
+func (m *MsgSubmitKVQueryResult) XXX_Size() int {
+	return m.Size()
+}
+func (m *MsgSubmitKVQueryResult) XXX_DiscardUnknown() {
+	xxx_messageInfo_MsgSubmitKVQueryResult.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_MsgSubmitKVQueryResult proto.InternalMessageInfo
+
+func (m *MsgSubmitKVQueryResult) GetQueryId() uint64 {
+	if m != nil {
+		return m.QueryId
+	}
+	return 0
+}
+
+func (m *MsgSubmitKVQueryResult) GetSender() string {
+	if m != nil {
+		return m.Sender
+	}
+	return ""
+}
+
+func (m *MsgSubmitKVQueryResult) GetClientId() string {
+	if m != nil {
+		return m.ClientId
+	}
+	return ""
+}
+
+func (m *MsgSubmitKVQueryResult) GetResult() *QueryResult {
 	if m != nil {
 		return m.Result
 	}
@@ -244,17 +367,16 @@ func (m *MsgSubmitQueryResult) GetResult() *QueryResult {
 
 type QueryResult struct {
 	KvResults        []*StorageValue `protobuf:"bytes,1,rep,name=kv_results,json=kvResults,proto3" json:"kv_results,omitempty"`
-	Block            *Block          `protobuf:"bytes,2,opt,name=block,proto3" json:"block,omitempty"`
-	Height           uint64          `protobuf:"varint,3,opt,name=height,proto3" json:"height,omitempty"`
-	Revision         uint64          `protobuf:"varint,4,opt,name=revision,proto3" json:"revision,omitempty"`
-	AllowKvCallbacks bool            `protobuf:"varint,5,opt,name=allow_kv_callbacks,json=allowKvCallbacks,proto3" json:"allow_kv_callbacks,omitempty"`
+	Height           uint64          `protobuf:"varint,2,opt,name=height,proto3" json:"height,omitempty"`
+	Revision         uint64          `protobuf:"varint,3,opt,name=revision,proto3" json:"revision,omitempty"`
+	AllowKvCallbacks bool            `protobuf:"varint,4,opt,name=allow_kv_callbacks,json=allowKvCallbacks,proto3" json:"allow_kv_callbacks,omitempty"`
 }
 
 func (m *QueryResult) Reset()         { *m = QueryResult{} }
 func (m *QueryResult) String() string { return proto.CompactTextString(m) }
 func (*QueryResult) ProtoMessage()    {}
 func (*QueryResult) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f1f36ccf3a8e51d, []int{3}
+	return fileDescriptor_3f1f36ccf3a8e51d, []int{5}
 }
 func (m *QueryResult) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -286,13 +408,6 @@ var xxx_messageInfo_QueryResult proto.InternalMessageInfo
 func (m *QueryResult) GetKvResults() []*StorageValue {
 	if m != nil {
 		return m.KvResults
-	}
-	return nil
-}
-
-func (m *QueryResult) GetBlock() *Block {
-	if m != nil {
-		return m.Block
 	}
 	return nil
 }
@@ -333,7 +448,7 @@ func (m *StorageValue) Reset()         { *m = StorageValue{} }
 func (m *StorageValue) String() string { return proto.CompactTextString(m) }
 func (*StorageValue) ProtoMessage()    {}
 func (*StorageValue) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f1f36ccf3a8e51d, []int{4}
+	return fileDescriptor_3f1f36ccf3a8e51d, []int{6}
 }
 func (m *StorageValue) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -403,7 +518,7 @@ func (m *Block) Reset()         { *m = Block{} }
 func (m *Block) String() string { return proto.CompactTextString(m) }
 func (*Block) ProtoMessage()    {}
 func (*Block) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f1f36ccf3a8e51d, []int{5}
+	return fileDescriptor_3f1f36ccf3a8e51d, []int{7}
 }
 func (m *Block) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -467,7 +582,7 @@ func (m *TxValue) Reset()         { *m = TxValue{} }
 func (m *TxValue) String() string { return proto.CompactTextString(m) }
 func (*TxValue) ProtoMessage()    {}
 func (*TxValue) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f1f36ccf3a8e51d, []int{6}
+	return fileDescriptor_3f1f36ccf3a8e51d, []int{8}
 }
 func (m *TxValue) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -531,7 +646,7 @@ func (m *MsgSubmitQueryResultResponse) Reset()         { *m = MsgSubmitQueryResu
 func (m *MsgSubmitQueryResultResponse) String() string { return proto.CompactTextString(m) }
 func (*MsgSubmitQueryResultResponse) ProtoMessage()    {}
 func (*MsgSubmitQueryResultResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_3f1f36ccf3a8e51d, []int{7}
+	return fileDescriptor_3f1f36ccf3a8e51d, []int{9}
 }
 func (m *MsgSubmitQueryResultResponse) XXX_Unmarshal(b []byte) error {
 	return m.Unmarshal(b)
@@ -561,9 +676,11 @@ func (m *MsgSubmitQueryResultResponse) XXX_DiscardUnknown() {
 var xxx_messageInfo_MsgSubmitQueryResultResponse proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*MsgRegisterInterchainQuery)(nil), "neutron.interchainadapter.interchainqueries.MsgRegisterInterchainQuery")
+	proto.RegisterType((*MsgRegisterInterchainKVQuery)(nil), "neutron.interchainadapter.interchainqueries.MsgRegisterInterchainKVQuery")
+	proto.RegisterType((*MsgRegisterInterchainTXQuery)(nil), "neutron.interchainadapter.interchainqueries.MsgRegisterInterchainTXQuery")
 	proto.RegisterType((*MsgRegisterInterchainQueryResponse)(nil), "neutron.interchainadapter.interchainqueries.MsgRegisterInterchainQueryResponse")
-	proto.RegisterType((*MsgSubmitQueryResult)(nil), "neutron.interchainadapter.interchainqueries.MsgSubmitQueryResult")
+	proto.RegisterType((*MsgSubmitTXQueryResult)(nil), "neutron.interchainadapter.interchainqueries.MsgSubmitTXQueryResult")
+	proto.RegisterType((*MsgSubmitKVQueryResult)(nil), "neutron.interchainadapter.interchainqueries.MsgSubmitKVQueryResult")
 	proto.RegisterType((*QueryResult)(nil), "neutron.interchainadapter.interchainqueries.QueryResult")
 	proto.RegisterType((*StorageValue)(nil), "neutron.interchainadapter.interchainqueries.StorageValue")
 	proto.RegisterType((*Block)(nil), "neutron.interchainadapter.interchainqueries.Block")
@@ -574,62 +691,64 @@ func init() {
 func init() { proto.RegisterFile("interchainqueries/tx.proto", fileDescriptor_3f1f36ccf3a8e51d) }
 
 var fileDescriptor_3f1f36ccf3a8e51d = []byte{
-	// 869 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x55, 0x41, 0x6f, 0x1b, 0x45,
-	0x14, 0xce, 0x3a, 0xb6, 0x93, 0xbc, 0x38, 0x69, 0x3b, 0x44, 0xd4, 0x75, 0xa8, 0x89, 0x16, 0x21,
-	0x45, 0xa2, 0xec, 0x0a, 0xd3, 0x43, 0xb9, 0x00, 0x29, 0x55, 0xa9, 0x15, 0x45, 0x0d, 0xd3, 0xa8,
-	0x42, 0x5c, 0x56, 0xeb, 0xdd, 0xc9, 0x7a, 0xe4, 0xcd, 0xcc, 0x32, 0x33, 0x6b, 0xbc, 0xfc, 0x8a,
-	0x4a, 0xfc, 0x02, 0x7e, 0x01, 0x07, 0x2e, 0x5c, 0xb8, 0x73, 0xec, 0x91, 0x1b, 0x90, 0xfc, 0x11,
-	0xb4, 0x6f, 0x76, 0x1d, 0x4b, 0xa9, 0x85, 0x2c, 0x7a, 0xdb, 0xf7, 0xde, 0xf7, 0xbe, 0x79, 0xf3,
-	0xcd, 0xcc, 0xb7, 0xd0, 0xe3, 0xc2, 0x30, 0x15, 0x8d, 0x43, 0x2e, 0xbe, 0xcf, 0x99, 0xe2, 0x4c,
-	0xfb, 0x66, 0xe6, 0x65, 0x4a, 0x1a, 0x49, 0x3e, 0x12, 0x2c, 0x37, 0x4a, 0x0a, 0xef, 0x1a, 0x13,
-	0xc6, 0x61, 0x66, 0x98, 0xf2, 0x6e, 0x74, 0xf5, 0xee, 0x1b, 0x26, 0x62, 0xa6, 0x2e, 0xb8, 0x30,
-	0x7e, 0xa4, 0x8a, 0xcc, 0x48, 0x3f, 0x53, 0x52, 0x9e, 0x5b, 0xae, 0xde, 0xfe, 0x42, 0x39, 0x1c,
-	0x45, 0xdc, 0x37, 0x45, 0xc6, 0x74, 0x55, 0xbc, 0x97, 0x48, 0x99, 0xa4, 0xcc, 0xc7, 0x68, 0x94,
-	0x9f, 0xfb, 0xa1, 0x28, 0xaa, 0xd2, 0xfb, 0x37, 0xe7, 0x4b, 0x98, 0x60, 0x9a, 0x57, 0xbd, 0xee,
-	0x2f, 0x0d, 0xe8, 0x9d, 0xe8, 0x84, 0xb2, 0x84, 0x6b, 0xc3, 0xd4, 0x70, 0x0e, 0xff, 0x26, 0x67,
-	0xaa, 0x20, 0xf7, 0x01, 0xca, 0xbe, 0x22, 0x28, 0xd7, 0xeb, 0x3a, 0x07, 0xce, 0xe1, 0x16, 0xdd,
-	0xc2, 0xcc, 0x59, 0x91, 0x31, 0xf2, 0x14, 0x9a, 0x13, 0x56, 0xe8, 0x6e, 0xe3, 0x60, 0xfd, 0x70,
-	0x7b, 0x30, 0xf0, 0x56, 0xd8, 0xb1, 0x77, 0xfc, 0xf2, 0x98, 0x15, 0x14, 0xfb, 0x89, 0x0f, 0xef,
-	0x18, 0x15, 0x0a, 0x1d, 0x46, 0x86, 0x4b, 0xa1, 0x83, 0x73, 0x9e, 0x1a, 0xa6, 0xba, 0xeb, 0xb8,
-	0x1e, 0x59, 0x2c, 0x3d, 0xc5, 0x0a, 0xb9, 0x0b, 0x1b, 0x3f, 0x4a, 0xc1, 0x02, 0x1e, 0x77, 0x9b,
-	0x08, 0x6a, 0x97, 0xe1, 0x30, 0x26, 0x1f, 0xc0, 0x4e, 0x24, 0x85, 0x60, 0x88, 0x2e, 0xcb, 0x2d,
-	0x2c, 0x77, 0xae, 0x93, 0x16, 0x94, 0x67, 0x71, 0x68, 0x58, 0x90, 0x31, 0xc5, 0x65, 0xdc, 0x6d,
-	0x1f, 0x38, 0x87, 0x4d, 0xda, 0xb1, 0xc9, 0x53, 0xcc, 0x91, 0x77, 0xa1, 0xad, 0x51, 0xf4, 0xee,
-	0x86, 0x5d, 0xc1, 0x46, 0xee, 0x43, 0x70, 0x97, 0x0b, 0x46, 0x99, 0xce, 0xa4, 0xd0, 0x8c, 0xec,
-	0x42, 0x83, 0xc7, 0x28, 0x58, 0x93, 0x36, 0x78, 0xec, 0xfe, 0xe6, 0xc0, 0xde, 0x89, 0x4e, 0x5e,
-	0xe4, 0xa3, 0x0b, 0x6e, 0x6a, 0x68, 0x9e, 0x1a, 0x72, 0x0f, 0x36, 0xad, 0xc2, 0x73, 0xf8, 0x06,
-	0xc6, 0xc3, 0xc5, 0x09, 0x1a, 0x8b, 0x13, 0x90, 0x7d, 0xd8, 0x8a, 0x52, 0xce, 0x84, 0x29, 0x7b,
-	0xac, 0x46, 0x9b, 0x36, 0x31, 0x8c, 0xc9, 0x29, 0xb4, 0x15, 0x32, 0xa3, 0x30, 0xdb, 0x83, 0x47,
-	0x2b, 0x1d, 0xca, 0xc2, 0x64, 0xb4, 0xe2, 0x71, 0x7f, 0x6a, 0xc0, 0xf6, 0xe2, 0xc4, 0xdf, 0x02,
-	0x4c, 0xa6, 0x81, 0x2d, 0xea, 0xae, 0x83, 0x47, 0xff, 0xd9, 0x4a, 0xab, 0xbc, 0x30, 0x52, 0x85,
-	0x09, 0x7b, 0x19, 0xa6, 0x39, 0xa3, 0x5b, 0x93, 0xa9, 0x25, 0xd6, 0xe4, 0x19, 0xb4, 0x46, 0xa9,
-	0x8c, 0x26, 0xb8, 0xdf, 0x55, 0xef, 0xd3, 0xe3, 0xb2, 0x93, 0x5a, 0x82, 0x52, 0xba, 0x31, 0xe3,
-	0xc9, 0xd8, 0xa0, 0x3e, 0x4d, 0x5a, 0x45, 0xa4, 0x07, 0x9b, 0x8a, 0x4d, 0xb9, 0xe6, 0x52, 0xa0,
-	0x3e, 0x4d, 0x3a, 0x8f, 0xc9, 0x03, 0x20, 0x61, 0x9a, 0xca, 0x1f, 0x82, 0xc9, 0x34, 0x88, 0xc2,
-	0x34, 0x1d, 0x85, 0xd1, 0x44, 0xe3, 0xfd, 0xd9, 0xa4, 0xb7, 0xb1, 0x72, 0x3c, 0xfd, 0xaa, 0xce,
-	0xbb, 0xaf, 0x1c, 0xe8, 0x2c, 0xee, 0x83, 0x7c, 0x08, 0xbb, 0xda, 0xc6, 0x41, 0xa6, 0xd8, 0x39,
-	0x9f, 0x55, 0xcf, 0x65, 0xa7, 0xca, 0x9e, 0x62, 0x92, 0xdc, 0x86, 0xf5, 0x09, 0x2b, 0x70, 0x87,
-	0x1d, 0x5a, 0x7e, 0x92, 0x3d, 0x68, 0x4d, 0x4b, 0x06, 0x1c, 0xb5, 0x43, 0x6d, 0x40, 0x3e, 0x81,
-	0xd6, 0x69, 0x69, 0x00, 0xd5, 0x31, 0xee, 0x7b, 0xd7, 0x0e, 0xe0, 0x59, 0x83, 0xf0, 0xb0, 0xfe,
-	0x3c, 0xd3, 0xd4, 0x22, 0xdd, 0xdf, 0x1d, 0x68, 0xa1, 0x0a, 0xe4, 0x4b, 0xb8, 0x23, 0xd8, 0xcc,
-	0x04, 0x28, 0x46, 0x30, 0x66, 0x61, 0x79, 0x89, 0x1c, 0x24, 0xda, 0xf3, 0xac, 0x5b, 0x78, 0xb5,
-	0x5b, 0x78, 0x47, 0xa2, 0xa0, 0xb7, 0x4a, 0x38, 0xf6, 0x3e, 0x43, 0x30, 0x79, 0x50, 0x0a, 0x18,
-	0xd6, 0x77, 0x6f, 0x59, 0x5b, 0x85, 0x21, 0x4f, 0xa0, 0x61, 0x66, 0x38, 0xff, 0xf6, 0xe0, 0xe1,
-	0x4a, 0xa7, 0x76, 0x36, 0xb3, 0xb7, 0xa0, 0x61, 0x66, 0xee, 0x3f, 0x0e, 0x6c, 0x54, 0x31, 0xf9,
-	0xbc, 0x3c, 0x28, 0xfb, 0x96, 0xaa, 0xc1, 0xdd, 0x45, 0x05, 0x4a, 0x0f, 0xf4, 0xea, 0xc7, 0xf6,
-	0x84, 0xa5, 0x7c, 0xca, 0xd4, 0xd9, 0x8c, 0xce, 0x7b, 0xc8, 0x17, 0xb0, 0x1b, 0xdb, 0x74, 0x11,
-	0xa0, 0x91, 0x56, 0xfb, 0xe8, 0x2e, 0xd3, 0x91, 0xee, 0xd4, 0x78, 0x0c, 0xc9, 0x11, 0xdc, 0xe2,
-	0x22, 0x4a, 0xf3, 0xf2, 0x6a, 0x54, 0x0c, 0xeb, 0xff, 0xc1, 0xb0, 0x3b, 0x6f, 0xb0, 0x14, 0x04,
-	0x9a, 0x71, 0x68, 0x42, 0x3c, 0xc1, 0x0e, 0xc5, 0x6f, 0xb7, 0x0f, 0xef, 0xbd, 0xc9, 0x06, 0xea,
-	0xad, 0x0c, 0xfe, 0x6a, 0xc0, 0xfa, 0x89, 0x4e, 0xc8, 0xaf, 0x0e, 0xdc, 0x5d, 0x66, 0xca, 0x5f,
-	0xaf, 0xa4, 0xf0, 0x72, 0xb3, 0xea, 0x3d, 0x7f, 0x4b, 0x44, 0x73, 0xd7, 0xfb, 0xd9, 0x81, 0x3b,
-	0x37, 0x2d, 0xee, 0x68, 0xd5, 0x65, 0x6e, 0x50, 0xf4, 0x86, 0xff, 0x9b, 0xa2, 0x9e, 0xf1, 0x31,
-	0xfd, 0xe3, 0xb2, 0xef, 0xbc, 0xbe, 0xec, 0x3b, 0x7f, 0x5f, 0xf6, 0x9d, 0x57, 0x57, 0xfd, 0xb5,
-	0xd7, 0x57, 0xfd, 0xb5, 0x3f, 0xaf, 0xfa, 0x6b, 0xdf, 0x3d, 0x4a, 0xb8, 0x19, 0xe7, 0x23, 0x2f,
-	0x92, 0x17, 0x7e, 0xb5, 0xdc, 0xc7, 0x52, 0x25, 0xf5, 0xb7, 0x3f, 0xf3, 0xdf, 0xf0, 0xb7, 0x2f,
-	0xff, 0xc3, 0xa3, 0x36, 0xbe, 0x8a, 0x4f, 0xff, 0x0d, 0x00, 0x00, 0xff, 0xff, 0x5f, 0xe5, 0xe6,
-	0x17, 0x0f, 0x08, 0x00, 0x00,
+	// 902 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x56, 0x4b, 0x6f, 0xdb, 0x46,
+	0x10, 0x36, 0xf5, 0xf0, 0x63, 0x2d, 0x3b, 0xe9, 0x26, 0x48, 0x65, 0xb9, 0x55, 0x0d, 0x16, 0x05,
+	0x0c, 0x34, 0x25, 0x51, 0x35, 0x87, 0xf4, 0xd2, 0x36, 0x0f, 0x04, 0x11, 0x0c, 0x23, 0xee, 0xc6,
+	0x30, 0x82, 0x5e, 0x08, 0x8a, 0x1c, 0x53, 0x0b, 0xd1, 0xbb, 0xec, 0xee, 0x52, 0x15, 0xfb, 0x2b,
+	0xf2, 0x27, 0xf2, 0x07, 0x7a, 0x29, 0x50, 0xa0, 0xf7, 0xe6, 0x96, 0x63, 0x8f, 0xad, 0xfd, 0x47,
+	0x0a, 0xee, 0xae, 0x5e, 0x88, 0xd4, 0x40, 0x79, 0xdc, 0x38, 0xaf, 0x6f, 0xbf, 0x99, 0x9d, 0x99,
+	0x25, 0x6a, 0x51, 0xa6, 0x40, 0x44, 0xfd, 0x90, 0xb2, 0x9f, 0x73, 0x10, 0x14, 0xa4, 0xaf, 0x46,
+	0x5e, 0x26, 0xb8, 0xe2, 0xf8, 0x4b, 0x06, 0xb9, 0x12, 0x9c, 0x79, 0x53, 0x9f, 0x30, 0x0e, 0x33,
+	0x05, 0xc2, 0x7b, 0x2d, 0xaa, 0xf5, 0xa9, 0x02, 0x16, 0x83, 0xb8, 0xa0, 0x4c, 0xf9, 0x91, 0x28,
+	0x32, 0xc5, 0xfd, 0x4c, 0x70, 0x7e, 0x6e, 0xb0, 0x5a, 0xfb, 0x33, 0xe6, 0xb0, 0x17, 0x51, 0x5f,
+	0x15, 0x19, 0x48, 0x6b, 0xdc, 0x4b, 0x38, 0x4f, 0x52, 0xf0, 0xb5, 0xd4, 0xcb, 0xcf, 0xfd, 0x90,
+	0x15, 0xd6, 0xf4, 0xd9, 0xeb, 0xfc, 0x12, 0x60, 0x20, 0xa9, 0x8d, 0x75, 0xff, 0x75, 0xd0, 0x27,
+	0xc7, 0x32, 0x21, 0x90, 0x50, 0xa9, 0x40, 0x74, 0x27, 0xee, 0x47, 0x67, 0x3f, 0xe6, 0x20, 0x0a,
+	0xfc, 0x08, 0xd5, 0x06, 0x50, 0xc8, 0xa6, 0x73, 0x50, 0x3d, 0xdc, 0xee, 0x74, 0xbc, 0x15, 0x92,
+	0xf2, 0x8e, 0xce, 0x8e, 0xa0, 0x20, 0x3a, 0x1e, 0x7f, 0x8c, 0x36, 0x7e, 0xe5, 0x0c, 0x02, 0x1a,
+	0x37, 0x2b, 0x07, 0xce, 0xe1, 0x16, 0x59, 0x2f, 0xc5, 0x6e, 0x8c, 0x3f, 0x47, 0x3b, 0x11, 0x67,
+	0x0c, 0x22, 0x45, 0x39, 0x2b, 0xcd, 0x55, 0x6d, 0x6e, 0x4c, 0x95, 0xc6, 0x29, 0xcf, 0xe2, 0x50,
+	0x41, 0x90, 0x81, 0xa0, 0x3c, 0x6e, 0xd6, 0x0e, 0x9c, 0xc3, 0x1a, 0x69, 0x18, 0xe5, 0x89, 0xd6,
+	0xe1, 0x5b, 0x68, 0x5d, 0xea, 0x32, 0x35, 0xeb, 0xe6, 0x04, 0x23, 0xb9, 0x2f, 0x96, 0xe5, 0x78,
+	0xfa, 0xcc, 0xe4, 0xe8, 0xa3, 0x1b, 0x4a, 0x84, 0x4c, 0x86, 0xfa, 0x38, 0x19, 0x9c, 0xd3, 0x54,
+	0x81, 0x68, 0x3a, 0x1a, 0x05, 0xcf, 0x9a, 0x1e, 0x69, 0xcb, 0x3b, 0x26, 0x33, 0xe5, 0x59, 0x9b,
+	0xe3, 0x79, 0x07, 0xb9, 0x0b, 0x69, 0x6a, 0x92, 0x04, 0x64, 0xc6, 0x99, 0x04, 0xbc, 0x8b, 0x2a,
+	0x34, 0xd6, 0xdc, 0x6a, 0xa4, 0x42, 0x63, 0xf7, 0x37, 0x07, 0xdd, 0x3a, 0x96, 0xc9, 0xd3, 0xbc,
+	0x77, 0x41, 0x95, 0xcd, 0x88, 0x80, 0xcc, 0x53, 0x85, 0xf7, 0xd0, 0x66, 0x79, 0x15, 0x45, 0x30,
+	0x09, 0xd8, 0xd0, 0xf2, 0x1c, 0x87, 0xca, 0x2c, 0x07, 0xbc, 0x8f, 0xb6, 0xa2, 0x94, 0x02, 0x53,
+	0x53, 0xf2, 0x9b, 0x46, 0xd1, 0x8d, 0xf1, 0x63, 0x54, 0xef, 0xa5, 0x3c, 0x1a, 0x68, 0xde, 0xab,
+	0x36, 0xc3, 0xfd, 0x32, 0x92, 0x18, 0x00, 0xf7, 0x8f, 0x59, 0xd2, 0xb6, 0xd5, 0x3e, 0x10, 0xe9,
+	0x13, 0xb4, 0x2e, 0x34, 0xb2, 0x65, 0x7d, 0x77, 0x25, 0xd6, 0x33, 0xcc, 0x88, 0xc5, 0x71, 0x5f,
+	0x3a, 0x68, 0x7b, 0x96, 0xf1, 0x33, 0x84, 0x06, 0xc3, 0xc0, 0x18, 0xc7, 0x83, 0xf2, 0xed, 0x4a,
+	0xa7, 0x3c, 0x55, 0x5c, 0x84, 0x09, 0x9c, 0x85, 0x69, 0x0e, 0x64, 0x6b, 0x30, 0x34, 0xc0, 0xb2,
+	0x4c, 0xb8, 0x0f, 0x34, 0xe9, 0x2b, 0x9d, 0x70, 0x8d, 0x58, 0x09, 0xb7, 0xd0, 0xa6, 0x80, 0x21,
+	0x95, 0x94, 0x33, 0x9d, 0x6f, 0x8d, 0x4c, 0x64, 0x7c, 0x1b, 0xe1, 0x30, 0x4d, 0xf9, 0x2f, 0xc1,
+	0x60, 0x18, 0x44, 0x61, 0x9a, 0xf6, 0xc2, 0x68, 0x20, 0x75, 0xee, 0x9b, 0xe4, 0xba, 0xb6, 0x1c,
+	0x0d, 0x1f, 0x8c, 0xf5, 0xee, 0x73, 0x07, 0x35, 0x66, 0x4f, 0xc7, 0x5f, 0xa0, 0x5d, 0x69, 0xe4,
+	0x20, 0x13, 0x70, 0x4e, 0x47, 0x76, 0x0c, 0x76, 0xac, 0xf6, 0x44, 0x2b, 0xf1, 0x75, 0x54, 0x1d,
+	0x40, 0xa1, 0x69, 0x35, 0x48, 0xf9, 0x89, 0x6f, 0xa2, 0xfa, 0xb0, 0x44, 0xd0, 0x84, 0x1a, 0xc4,
+	0x08, 0xf8, 0x6b, 0x54, 0x3f, 0x29, 0xf7, 0x98, 0x2d, 0xfe, 0xbe, 0x37, 0x5d, 0x64, 0x9e, 0xd9,
+	0x73, 0x9e, 0xb6, 0x3f, 0xc9, 0x24, 0x31, 0x9e, 0xee, 0x9f, 0x0e, 0xaa, 0xeb, 0x66, 0xc1, 0x3f,
+	0xa0, 0x8f, 0x18, 0x8c, 0x54, 0xa0, 0x7b, 0x26, 0xe8, 0x43, 0x18, 0xdb, 0xa9, 0xdc, 0xee, 0xdc,
+	0xf4, 0xcc, 0xd2, 0xf3, 0xc6, 0x4b, 0xcf, 0xbb, 0xc7, 0x0a, 0x72, 0xad, 0x74, 0xd7, 0xb1, 0x8f,
+	0xb5, 0x33, 0xbe, 0x5d, 0x16, 0x30, 0x1c, 0x77, 0xcc, 0xb2, 0x30, 0xeb, 0x83, 0x1f, 0xa2, 0x8a,
+	0x1a, 0x69, 0xfe, 0xdb, 0x9d, 0x3b, 0x2b, 0x5d, 0xe0, 0xe9, 0xc8, 0xdc, 0x5d, 0x45, 0x8d, 0xca,
+	0x95, 0xba, 0x61, 0x65, 0xfc, 0x5d, 0x79, 0x51, 0x66, 0x70, 0x2d, 0x71, 0x77, 0xb6, 0x02, 0xe5,
+	0x2a, 0xf7, 0xc6, 0x93, 0xfd, 0x10, 0x52, 0x3a, 0x04, 0x71, 0x3a, 0x22, 0x93, 0x18, 0xfc, 0x3d,
+	0xda, 0x8d, 0x8d, 0xba, 0x08, 0xf4, 0x7b, 0x60, 0xf3, 0x68, 0x2e, 0xab, 0x23, 0xd9, 0x19, 0xfb,
+	0x6b, 0x11, 0xdf, 0x43, 0xd7, 0x28, 0x8b, 0xd2, 0xbc, 0x6c, 0x0d, 0x8b, 0x50, 0x7d, 0x03, 0xc2,
+	0xee, 0x24, 0xc0, 0x40, 0x60, 0x54, 0x8b, 0x43, 0x15, 0xea, 0x1b, 0x6c, 0x10, 0xfd, 0xed, 0xb6,
+	0xf5, 0x46, 0x35, 0xe3, 0x3b, 0x3b, 0x22, 0x96, 0x77, 0xe7, 0x65, 0x1d, 0x55, 0x8f, 0x65, 0x82,
+	0x7f, 0x77, 0xd0, 0xde, 0xf2, 0xb7, 0xa5, 0xbb, 0x52, 0x8d, 0xff, 0xef, 0x99, 0x6a, 0x3d, 0x79,
+	0x77, 0xa8, 0xf9, 0x35, 0xfb, 0xc2, 0x41, 0x37, 0x16, 0xad, 0xa7, 0x07, 0xab, 0x1e, 0xb4, 0x00,
+	0xa4, 0xd5, 0x7d, 0x3b, 0x90, 0x05, 0x95, 0x5e, 0x52, 0xe1, 0xf1, 0xcb, 0xf6, 0x1e, 0x2a, 0x6c,
+	0xa1, 0x3e, 0x64, 0x85, 0xe7, 0x5f, 0xad, 0xb7, 0xac, 0xf0, 0x1c, 0xc8, 0x7b, 0xac, 0xf0, 0x7d,
+	0xf2, 0xd7, 0x65, 0xdb, 0x79, 0x75, 0xd9, 0x76, 0xfe, 0xb9, 0x6c, 0x3b, 0xcf, 0xaf, 0xda, 0x6b,
+	0xaf, 0xae, 0xda, 0x6b, 0x7f, 0x5f, 0xb5, 0xd7, 0x7e, 0xba, 0x9b, 0x50, 0xd5, 0xcf, 0x7b, 0x5e,
+	0xc4, 0x2f, 0x7c, 0x7b, 0xdc, 0x57, 0x5c, 0x24, 0xe3, 0x6f, 0x7f, 0xe4, 0x2f, 0xf8, 0x3d, 0x2c,
+	0x7f, 0xdc, 0x7a, 0xeb, 0x7a, 0xff, 0x7c, 0xf3, 0x5f, 0x00, 0x00, 0x00, 0xff, 0xff, 0x68, 0x23,
+	0xbe, 0x64, 0x40, 0x0a, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -644,8 +763,10 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type MsgClient interface {
-	RegisterInterchainQuery(ctx context.Context, in *MsgRegisterInterchainQuery, opts ...grpc.CallOption) (*MsgRegisterInterchainQueryResponse, error)
-	SubmitQueryResult(ctx context.Context, in *MsgSubmitQueryResult, opts ...grpc.CallOption) (*MsgSubmitQueryResultResponse, error)
+	RegisterInterchainKVQuery(ctx context.Context, in *MsgRegisterInterchainKVQuery, opts ...grpc.CallOption) (*MsgRegisterInterchainQueryResponse, error)
+	SubmitKVQueryResult(ctx context.Context, in *MsgSubmitKVQueryResult, opts ...grpc.CallOption) (*MsgSubmitQueryResultResponse, error)
+	RegisterInterchainTXQuery(ctx context.Context, in *MsgRegisterInterchainTXQuery, opts ...grpc.CallOption) (*MsgRegisterInterchainQueryResponse, error)
+	SubmitTXQueryResult(ctx context.Context, in *MsgSubmitTXQueryResult, opts ...grpc.CallOption) (*MsgSubmitQueryResultResponse, error)
 }
 
 type msgClient struct {
@@ -656,18 +777,36 @@ func NewMsgClient(cc grpc1.ClientConn) MsgClient {
 	return &msgClient{cc}
 }
 
-func (c *msgClient) RegisterInterchainQuery(ctx context.Context, in *MsgRegisterInterchainQuery, opts ...grpc.CallOption) (*MsgRegisterInterchainQueryResponse, error) {
+func (c *msgClient) RegisterInterchainKVQuery(ctx context.Context, in *MsgRegisterInterchainKVQuery, opts ...grpc.CallOption) (*MsgRegisterInterchainQueryResponse, error) {
 	out := new(MsgRegisterInterchainQueryResponse)
-	err := c.cc.Invoke(ctx, "/neutron.interchainadapter.interchainqueries.Msg/RegisterInterchainQuery", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/neutron.interchainadapter.interchainqueries.Msg/RegisterInterchainKVQuery", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *msgClient) SubmitQueryResult(ctx context.Context, in *MsgSubmitQueryResult, opts ...grpc.CallOption) (*MsgSubmitQueryResultResponse, error) {
+func (c *msgClient) SubmitKVQueryResult(ctx context.Context, in *MsgSubmitKVQueryResult, opts ...grpc.CallOption) (*MsgSubmitQueryResultResponse, error) {
 	out := new(MsgSubmitQueryResultResponse)
-	err := c.cc.Invoke(ctx, "/neutron.interchainadapter.interchainqueries.Msg/SubmitQueryResult", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/neutron.interchainadapter.interchainqueries.Msg/SubmitKVQueryResult", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) RegisterInterchainTXQuery(ctx context.Context, in *MsgRegisterInterchainTXQuery, opts ...grpc.CallOption) (*MsgRegisterInterchainQueryResponse, error) {
+	out := new(MsgRegisterInterchainQueryResponse)
+	err := c.cc.Invoke(ctx, "/neutron.interchainadapter.interchainqueries.Msg/RegisterInterchainTXQuery", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *msgClient) SubmitTXQueryResult(ctx context.Context, in *MsgSubmitTXQueryResult, opts ...grpc.CallOption) (*MsgSubmitQueryResultResponse, error) {
+	out := new(MsgSubmitQueryResultResponse)
+	err := c.cc.Invoke(ctx, "/neutron.interchainadapter.interchainqueries.Msg/SubmitTXQueryResult", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -676,57 +815,101 @@ func (c *msgClient) SubmitQueryResult(ctx context.Context, in *MsgSubmitQueryRes
 
 // MsgServer is the server API for Msg service.
 type MsgServer interface {
-	RegisterInterchainQuery(context.Context, *MsgRegisterInterchainQuery) (*MsgRegisterInterchainQueryResponse, error)
-	SubmitQueryResult(context.Context, *MsgSubmitQueryResult) (*MsgSubmitQueryResultResponse, error)
+	RegisterInterchainKVQuery(context.Context, *MsgRegisterInterchainKVQuery) (*MsgRegisterInterchainQueryResponse, error)
+	SubmitKVQueryResult(context.Context, *MsgSubmitKVQueryResult) (*MsgSubmitQueryResultResponse, error)
+	RegisterInterchainTXQuery(context.Context, *MsgRegisterInterchainTXQuery) (*MsgRegisterInterchainQueryResponse, error)
+	SubmitTXQueryResult(context.Context, *MsgSubmitTXQueryResult) (*MsgSubmitQueryResultResponse, error)
 }
 
 // UnimplementedMsgServer can be embedded to have forward compatible implementations.
 type UnimplementedMsgServer struct {
 }
 
-func (*UnimplementedMsgServer) RegisterInterchainQuery(ctx context.Context, req *MsgRegisterInterchainQuery) (*MsgRegisterInterchainQueryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method RegisterInterchainQuery not implemented")
+func (*UnimplementedMsgServer) RegisterInterchainKVQuery(ctx context.Context, req *MsgRegisterInterchainKVQuery) (*MsgRegisterInterchainQueryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterInterchainKVQuery not implemented")
 }
-func (*UnimplementedMsgServer) SubmitQueryResult(ctx context.Context, req *MsgSubmitQueryResult) (*MsgSubmitQueryResultResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SubmitQueryResult not implemented")
+func (*UnimplementedMsgServer) SubmitKVQueryResult(ctx context.Context, req *MsgSubmitKVQueryResult) (*MsgSubmitQueryResultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SubmitKVQueryResult not implemented")
+}
+func (*UnimplementedMsgServer) RegisterInterchainTXQuery(ctx context.Context, req *MsgRegisterInterchainTXQuery) (*MsgRegisterInterchainQueryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method RegisterInterchainTXQuery not implemented")
+}
+func (*UnimplementedMsgServer) SubmitTXQueryResult(ctx context.Context, req *MsgSubmitTXQueryResult) (*MsgSubmitQueryResultResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SubmitTXQueryResult not implemented")
 }
 
 func RegisterMsgServer(s grpc1.Server, srv MsgServer) {
 	s.RegisterService(&_Msg_serviceDesc, srv)
 }
 
-func _Msg_RegisterInterchainQuery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgRegisterInterchainQuery)
+func _Msg_RegisterInterchainKVQuery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRegisterInterchainKVQuery)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).RegisterInterchainQuery(ctx, in)
+		return srv.(MsgServer).RegisterInterchainKVQuery(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/neutron.interchainadapter.interchainqueries.Msg/RegisterInterchainQuery",
+		FullMethod: "/neutron.interchainadapter.interchainqueries.Msg/RegisterInterchainKVQuery",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).RegisterInterchainQuery(ctx, req.(*MsgRegisterInterchainQuery))
+		return srv.(MsgServer).RegisterInterchainKVQuery(ctx, req.(*MsgRegisterInterchainKVQuery))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _Msg_SubmitQueryResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(MsgSubmitQueryResult)
+func _Msg_SubmitKVQueryResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSubmitKVQueryResult)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(MsgServer).SubmitQueryResult(ctx, in)
+		return srv.(MsgServer).SubmitKVQueryResult(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/neutron.interchainadapter.interchainqueries.Msg/SubmitQueryResult",
+		FullMethod: "/neutron.interchainadapter.interchainqueries.Msg/SubmitKVQueryResult",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(MsgServer).SubmitQueryResult(ctx, req.(*MsgSubmitQueryResult))
+		return srv.(MsgServer).SubmitKVQueryResult(ctx, req.(*MsgSubmitKVQueryResult))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_RegisterInterchainTXQuery_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgRegisterInterchainTXQuery)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).RegisterInterchainTXQuery(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/neutron.interchainadapter.interchainqueries.Msg/RegisterInterchainTXQuery",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).RegisterInterchainTXQuery(ctx, req.(*MsgRegisterInterchainTXQuery))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Msg_SubmitTXQueryResult_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(MsgSubmitTXQueryResult)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MsgServer).SubmitTXQueryResult(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/neutron.interchainadapter.interchainqueries.Msg/SubmitTXQueryResult",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MsgServer).SubmitTXQueryResult(ctx, req.(*MsgSubmitTXQueryResult))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -736,19 +919,27 @@ var _Msg_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*MsgServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "RegisterInterchainQuery",
-			Handler:    _Msg_RegisterInterchainQuery_Handler,
+			MethodName: "RegisterInterchainKVQuery",
+			Handler:    _Msg_RegisterInterchainKVQuery_Handler,
 		},
 		{
-			MethodName: "SubmitQueryResult",
-			Handler:    _Msg_SubmitQueryResult_Handler,
+			MethodName: "SubmitKVQueryResult",
+			Handler:    _Msg_SubmitKVQueryResult_Handler,
+		},
+		{
+			MethodName: "RegisterInterchainTXQuery",
+			Handler:    _Msg_RegisterInterchainTXQuery_Handler,
+		},
+		{
+			MethodName: "SubmitTXQueryResult",
+			Handler:    _Msg_SubmitTXQueryResult_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "interchainqueries/tx.proto",
 }
 
-func (m *MsgRegisterInterchainQuery) Marshal() (dAtA []byte, err error) {
+func (m *MsgRegisterInterchainKVQuery) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -758,12 +949,12 @@ func (m *MsgRegisterInterchainQuery) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgRegisterInterchainQuery) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgRegisterInterchainKVQuery) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgRegisterInterchainQuery) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgRegisterInterchainKVQuery) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -773,33 +964,26 @@ func (m *MsgRegisterInterchainQuery) MarshalToSizedBuffer(dAtA []byte) (int, err
 		copy(dAtA[i:], m.Sender)
 		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
 		i--
-		dAtA[i] = 0x3a
+		dAtA[i] = 0x2a
 	}
 	if m.UpdatePeriod != 0 {
 		i = encodeVarintTx(dAtA, i, uint64(m.UpdatePeriod))
 		i--
-		dAtA[i] = 0x30
+		dAtA[i] = 0x20
 	}
 	if len(m.ConnectionId) > 0 {
 		i -= len(m.ConnectionId)
 		copy(dAtA[i:], m.ConnectionId)
 		i = encodeVarintTx(dAtA, i, uint64(len(m.ConnectionId)))
 		i--
-		dAtA[i] = 0x2a
+		dAtA[i] = 0x1a
 	}
 	if len(m.ZoneId) > 0 {
 		i -= len(m.ZoneId)
 		copy(dAtA[i:], m.ZoneId)
 		i = encodeVarintTx(dAtA, i, uint64(len(m.ZoneId)))
 		i--
-		dAtA[i] = 0x22
-	}
-	if len(m.TransactionsFilter) > 0 {
-		i -= len(m.TransactionsFilter)
-		copy(dAtA[i:], m.TransactionsFilter)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.TransactionsFilter)))
-		i--
-		dAtA[i] = 0x1a
+		dAtA[i] = 0x12
 	}
 	if len(m.Keys) > 0 {
 		for iNdEx := len(m.Keys) - 1; iNdEx >= 0; iNdEx-- {
@@ -812,13 +996,57 @@ func (m *MsgRegisterInterchainQuery) MarshalToSizedBuffer(dAtA []byte) (int, err
 				i = encodeVarintTx(dAtA, i, uint64(size))
 			}
 			i--
-			dAtA[i] = 0x12
+			dAtA[i] = 0xa
 		}
 	}
-	if len(m.QueryType) > 0 {
-		i -= len(m.QueryType)
-		copy(dAtA[i:], m.QueryType)
-		i = encodeVarintTx(dAtA, i, uint64(len(m.QueryType)))
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgRegisterInterchainTXQuery) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgRegisterInterchainTXQuery) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgRegisterInterchainTXQuery) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if len(m.Sender) > 0 {
+		i -= len(m.Sender)
+		copy(dAtA[i:], m.Sender)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.ConnectionId) > 0 {
+		i -= len(m.ConnectionId)
+		copy(dAtA[i:], m.ConnectionId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ConnectionId)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.ZoneId) > 0 {
+		i -= len(m.ZoneId)
+		copy(dAtA[i:], m.ZoneId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ZoneId)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if len(m.TransactionsFilter) > 0 {
+		i -= len(m.TransactionsFilter)
+		copy(dAtA[i:], m.TransactionsFilter)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.TransactionsFilter)))
 		i--
 		dAtA[i] = 0xa
 	}
@@ -853,7 +1081,7 @@ func (m *MsgRegisterInterchainQueryResponse) MarshalToSizedBuffer(dAtA []byte) (
 	return len(dAtA) - i, nil
 }
 
-func (m *MsgSubmitQueryResult) Marshal() (dAtA []byte, err error) {
+func (m *MsgSubmitTXQueryResult) Marshal() (dAtA []byte, err error) {
 	size := m.Size()
 	dAtA = make([]byte, size)
 	n, err := m.MarshalToSizedBuffer(dAtA[:size])
@@ -863,12 +1091,66 @@ func (m *MsgSubmitQueryResult) Marshal() (dAtA []byte, err error) {
 	return dAtA[:n], nil
 }
 
-func (m *MsgSubmitQueryResult) MarshalTo(dAtA []byte) (int, error) {
+func (m *MsgSubmitTXQueryResult) MarshalTo(dAtA []byte) (int, error) {
 	size := m.Size()
 	return m.MarshalToSizedBuffer(dAtA[:size])
 }
 
-func (m *MsgSubmitQueryResult) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+func (m *MsgSubmitTXQueryResult) MarshalToSizedBuffer(dAtA []byte) (int, error) {
+	i := len(dAtA)
+	_ = i
+	var l int
+	_ = l
+	if m.Block != nil {
+		{
+			size, err := m.Block.MarshalToSizedBuffer(dAtA[:i])
+			if err != nil {
+				return 0, err
+			}
+			i -= size
+			i = encodeVarintTx(dAtA, i, uint64(size))
+		}
+		i--
+		dAtA[i] = 0x22
+	}
+	if len(m.ClientId) > 0 {
+		i -= len(m.ClientId)
+		copy(dAtA[i:], m.ClientId)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.ClientId)))
+		i--
+		dAtA[i] = 0x1a
+	}
+	if len(m.Sender) > 0 {
+		i -= len(m.Sender)
+		copy(dAtA[i:], m.Sender)
+		i = encodeVarintTx(dAtA, i, uint64(len(m.Sender)))
+		i--
+		dAtA[i] = 0x12
+	}
+	if m.QueryId != 0 {
+		i = encodeVarintTx(dAtA, i, uint64(m.QueryId))
+		i--
+		dAtA[i] = 0x8
+	}
+	return len(dAtA) - i, nil
+}
+
+func (m *MsgSubmitKVQueryResult) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalToSizedBuffer(dAtA[:size])
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *MsgSubmitKVQueryResult) MarshalTo(dAtA []byte) (int, error) {
+	size := m.Size()
+	return m.MarshalToSizedBuffer(dAtA[:size])
+}
+
+func (m *MsgSubmitKVQueryResult) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 	i := len(dAtA)
 	_ = i
 	var l int
@@ -935,29 +1217,17 @@ func (m *QueryResult) MarshalToSizedBuffer(dAtA []byte) (int, error) {
 			dAtA[i] = 0
 		}
 		i--
-		dAtA[i] = 0x28
+		dAtA[i] = 0x20
 	}
 	if m.Revision != 0 {
 		i = encodeVarintTx(dAtA, i, uint64(m.Revision))
 		i--
-		dAtA[i] = 0x20
+		dAtA[i] = 0x18
 	}
 	if m.Height != 0 {
 		i = encodeVarintTx(dAtA, i, uint64(m.Height))
 		i--
-		dAtA[i] = 0x18
-	}
-	if m.Block != nil {
-		{
-			size, err := m.Block.MarshalToSizedBuffer(dAtA[:i])
-			if err != nil {
-				return 0, err
-			}
-			i -= size
-			i = encodeVarintTx(dAtA, i, uint64(size))
-		}
-		i--
-		dAtA[i] = 0x12
+		dAtA[i] = 0x10
 	}
 	if len(m.KvResults) > 0 {
 		for iNdEx := len(m.KvResults) - 1; iNdEx >= 0; iNdEx-- {
@@ -1191,25 +1461,17 @@ func encodeVarintTx(dAtA []byte, offset int, v uint64) int {
 	dAtA[offset] = uint8(v)
 	return base
 }
-func (m *MsgRegisterInterchainQuery) Size() (n int) {
+func (m *MsgRegisterInterchainKVQuery) Size() (n int) {
 	if m == nil {
 		return 0
 	}
 	var l int
 	_ = l
-	l = len(m.QueryType)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
-	}
 	if len(m.Keys) > 0 {
 		for _, e := range m.Keys {
 			l = e.Size()
 			n += 1 + l + sovTx(uint64(l))
 		}
-	}
-	l = len(m.TransactionsFilter)
-	if l > 0 {
-		n += 1 + l + sovTx(uint64(l))
 	}
 	l = len(m.ZoneId)
 	if l > 0 {
@@ -1221,6 +1483,31 @@ func (m *MsgRegisterInterchainQuery) Size() (n int) {
 	}
 	if m.UpdatePeriod != 0 {
 		n += 1 + sovTx(uint64(m.UpdatePeriod))
+	}
+	l = len(m.Sender)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgRegisterInterchainTXQuery) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.TransactionsFilter)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ZoneId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ConnectionId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
 	}
 	l = len(m.Sender)
 	if l > 0 {
@@ -1241,7 +1528,31 @@ func (m *MsgRegisterInterchainQueryResponse) Size() (n int) {
 	return n
 }
 
-func (m *MsgSubmitQueryResult) Size() (n int) {
+func (m *MsgSubmitTXQueryResult) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.QueryId != 0 {
+		n += 1 + sovTx(uint64(m.QueryId))
+	}
+	l = len(m.Sender)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	l = len(m.ClientId)
+	if l > 0 {
+		n += 1 + l + sovTx(uint64(l))
+	}
+	if m.Block != nil {
+		l = m.Block.Size()
+		n += 1 + l + sovTx(uint64(l))
+	}
+	return n
+}
+
+func (m *MsgSubmitKVQueryResult) Size() (n int) {
 	if m == nil {
 		return 0
 	}
@@ -1276,10 +1587,6 @@ func (m *QueryResult) Size() (n int) {
 			l = e.Size()
 			n += 1 + l + sovTx(uint64(l))
 		}
-	}
-	if m.Block != nil {
-		l = m.Block.Size()
-		n += 1 + l + sovTx(uint64(l))
 	}
 	if m.Height != 0 {
 		n += 1 + sovTx(uint64(m.Height))
@@ -1379,7 +1686,7 @@ func sovTx(x uint64) (n int) {
 func sozTx(x uint64) (n int) {
 	return sovTx(uint64((x << 1) ^ uint64((int64(x) >> 63))))
 }
-func (m *MsgRegisterInterchainQuery) Unmarshal(dAtA []byte) error {
+func (m *MsgRegisterInterchainKVQuery) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1402,45 +1709,13 @@ func (m *MsgRegisterInterchainQuery) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgRegisterInterchainQuery: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgRegisterInterchainKVQuery: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgRegisterInterchainQuery: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgRegisterInterchainKVQuery: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field QueryType", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.QueryType = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Keys", wireType)
 			}
@@ -1474,39 +1749,7 @@ func (m *MsgRegisterInterchainQuery) Unmarshal(dAtA []byte) error {
 				return err
 			}
 			iNdEx = postIndex
-		case 3:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field TransactionsFilter", wireType)
-			}
-			var stringLen uint64
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				stringLen |= uint64(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			intStringLen := int(stringLen)
-			if intStringLen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + intStringLen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			m.TransactionsFilter = string(dAtA[iNdEx:postIndex])
-			iNdEx = postIndex
-		case 4:
+		case 2:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ZoneId", wireType)
 			}
@@ -1538,7 +1781,7 @@ func (m *MsgRegisterInterchainQuery) Unmarshal(dAtA []byte) error {
 			}
 			m.ZoneId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 5:
+		case 3:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field ConnectionId", wireType)
 			}
@@ -1570,7 +1813,7 @@ func (m *MsgRegisterInterchainQuery) Unmarshal(dAtA []byte) error {
 			}
 			m.ConnectionId = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
-		case 6:
+		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field UpdatePeriod", wireType)
 			}
@@ -1589,7 +1832,185 @@ func (m *MsgRegisterInterchainQuery) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 7:
+		case 5:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Sender = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgRegisterInterchainTXQuery) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgRegisterInterchainTXQuery: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgRegisterInterchainTXQuery: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field TransactionsFilter", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.TransactionsFilter = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ZoneId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ZoneId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ConnectionId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ConnectionId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
 			if wireType != 2 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
 			}
@@ -1711,7 +2132,7 @@ func (m *MsgRegisterInterchainQueryResponse) Unmarshal(dAtA []byte) error {
 	}
 	return nil
 }
-func (m *MsgSubmitQueryResult) Unmarshal(dAtA []byte) error {
+func (m *MsgSubmitTXQueryResult) Unmarshal(dAtA []byte) error {
 	l := len(dAtA)
 	iNdEx := 0
 	for iNdEx < l {
@@ -1734,10 +2155,179 @@ func (m *MsgSubmitQueryResult) Unmarshal(dAtA []byte) error {
 		fieldNum := int32(wire >> 3)
 		wireType := int(wire & 0x7)
 		if wireType == 4 {
-			return fmt.Errorf("proto: MsgSubmitQueryResult: wiretype end group for non-group")
+			return fmt.Errorf("proto: MsgSubmitTXQueryResult: wiretype end group for non-group")
 		}
 		if fieldNum <= 0 {
-			return fmt.Errorf("proto: MsgSubmitQueryResult: illegal tag %d (wire type %d)", fieldNum, wire)
+			return fmt.Errorf("proto: MsgSubmitTXQueryResult: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field QueryId", wireType)
+			}
+			m.QueryId = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.QueryId |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Sender", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.Sender = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field ClientId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.ClientId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 4:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Block", wireType)
+			}
+			var msglen int
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowTx
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				msglen |= int(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			if msglen < 0 {
+				return ErrInvalidLengthTx
+			}
+			postIndex := iNdEx + msglen
+			if postIndex < 0 {
+				return ErrInvalidLengthTx
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			if m.Block == nil {
+				m.Block = &Block{}
+			}
+			if err := m.Block.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
+				return err
+			}
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipTx(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if (skippy < 0) || (iNdEx+skippy) < 0 {
+				return ErrInvalidLengthTx
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *MsgSubmitKVQueryResult) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowTx
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: MsgSubmitKVQueryResult: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: MsgSubmitKVQueryResult: illegal tag %d (wire type %d)", fieldNum, wire)
 		}
 		switch fieldNum {
 		case 1:
@@ -1944,42 +2534,6 @@ func (m *QueryResult) Unmarshal(dAtA []byte) error {
 			}
 			iNdEx = postIndex
 		case 2:
-			if wireType != 2 {
-				return fmt.Errorf("proto: wrong wireType = %d for field Block", wireType)
-			}
-			var msglen int
-			for shift := uint(0); ; shift += 7 {
-				if shift >= 64 {
-					return ErrIntOverflowTx
-				}
-				if iNdEx >= l {
-					return io.ErrUnexpectedEOF
-				}
-				b := dAtA[iNdEx]
-				iNdEx++
-				msglen |= int(b&0x7F) << shift
-				if b < 0x80 {
-					break
-				}
-			}
-			if msglen < 0 {
-				return ErrInvalidLengthTx
-			}
-			postIndex := iNdEx + msglen
-			if postIndex < 0 {
-				return ErrInvalidLengthTx
-			}
-			if postIndex > l {
-				return io.ErrUnexpectedEOF
-			}
-			if m.Block == nil {
-				m.Block = &Block{}
-			}
-			if err := m.Block.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
-				return err
-			}
-			iNdEx = postIndex
-		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Height", wireType)
 			}
@@ -1998,7 +2552,7 @@ func (m *QueryResult) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 4:
+		case 3:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field Revision", wireType)
 			}
@@ -2017,7 +2571,7 @@ func (m *QueryResult) Unmarshal(dAtA []byte) error {
 					break
 				}
 			}
-		case 5:
+		case 4:
 			if wireType != 0 {
 				return fmt.Errorf("proto: wrong wireType = %d for field AllowKvCallbacks", wireType)
 			}

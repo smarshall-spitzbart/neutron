@@ -12,41 +12,64 @@ option go_package = "github.com/neutron-org/neutron/x/interchainqueries/types";
 
 // Msg defines the Msg service.
 service Msg {
-  rpc RegisterInterchainQuery(MsgRegisterInterchainQuery)
+  rpc RegisterInterchainKVQuery(MsgRegisterInterchainKVQuery)
       returns (MsgRegisterInterchainQueryResponse);
-  rpc SubmitQueryResult(MsgSubmitQueryResult)
+  rpc SubmitKVQueryResult(MsgSubmitKVQueryResult)
       returns (MsgSubmitQueryResultResponse);
+
+  rpc RegisterInterchainTXQuery(MsgRegisterInterchainTXQuery)
+      returns (MsgRegisterInterchainQueryResponse);
+  rpc SubmitTXQueryResult(MsgSubmitTXQueryResult)
+      returns (MsgSubmitQueryResultResponse);
+
   // this line is used by starport scaffolding # proto/tx/rpc
 }
 
 // this line is used by starport scaffolding # proto/tx/message
 
-message MsgRegisterInterchainQuery {
-  // defines a query type: `kv` or `tx` now
-  string query_type = 1;
-
+message MsgRegisterInterchainKVQuery {
   // is used to define KV-storage keys for which we want to get values from remote chain
-  repeated KVKey keys = 2;
-
-  // is used to define a filter for transaction search ICQ
-  string transactions_filter = 3;
+  repeated KVKey keys = 1;
 
   // is used to identify the chain of interest
-  string zone_id = 4;
+  string zone_id = 2;
 
   // is IBC connection ID for getting ConsensusState to verify proofs
-  string connection_id = 5;
+  string connection_id = 3;
 
   // is used to say how often the query must be updated
-  uint64 update_period = 6;
+  uint64 update_period = 4;
 
   // is the signer of the message
-  string sender = 7;
+  string sender = 5;
+}
+
+message MsgRegisterInterchainTXQuery {
+  // is used to define a filter for transaction search ICQ
+  string transactions_filter = 1;
+
+  // is used to identify the chain of interest
+  string zone_id = 2;
+
+  // is IBC connection ID for getting ConsensusState to verify proofs
+  string connection_id = 3;
+
+  // is the signer of the message
+  string sender = 4;
 }
 
 message MsgRegisterInterchainQueryResponse { uint64 id = 1; }
 
-message MsgSubmitQueryResult {
+message MsgSubmitTXQueryResult {
+  uint64 query_id = 1;
+  string sender = 2;
+
+  // is the IBC client ID for an IBC connection between Neutron chain and target chain (where the result was obtained from)
+  string client_id = 3;
+  Block block = 4;
+}
+
+message MsgSubmitKVQueryResult {
   uint64 query_id = 1;
   string sender = 2;
 
@@ -57,10 +80,9 @@ message MsgSubmitQueryResult {
 
 message QueryResult {
   repeated StorageValue kv_results = 1;
-  Block block = 2;
-  uint64 height = 3;
-  uint64 revision = 4;
-  bool allow_kv_callbacks = 5;
+  uint64 height = 2;
+  uint64 revision = 3;
+  bool allow_kv_callbacks = 4;
 }
 
 message StorageValue {

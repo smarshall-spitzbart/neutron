@@ -215,20 +215,18 @@ func (m *CustomMessenger) registerInterchainQuery(ctx sdk.Context, contractAddr 
 }
 
 func (m *CustomMessenger) PerformRegisterInterchainQuery(ctx sdk.Context, contractAddr sdk.AccAddress, reg *bindings.RegisterInterchainQuery) (*bindings.RegisterInterchainQueryResponse, error) {
-	msg := icqtypes.MsgRegisterInterchainQuery{
-		Keys:               reg.Keys,
-		TransactionsFilter: reg.TransactionsFilter,
-		QueryType:          reg.QueryType,
-		ZoneId:             reg.ZoneId,
-		ConnectionId:       reg.ConnectionId,
-		UpdatePeriod:       reg.UpdatePeriod,
-		Sender:             contractAddr.String(),
+	msg := icqtypes.MsgRegisterInterchainKVQuery{
+		Keys:         reg.Keys,
+		ZoneId:       reg.ZoneId,
+		ConnectionId: reg.ConnectionId,
+		UpdatePeriod: reg.UpdatePeriod,
+		Sender:       contractAddr.String(),
 	}
 	if err := msg.ValidateBasic(); err != nil {
-		return nil, sdkerrors.Wrap(err, "failed to validate incoming RegisterInterchainQuery message")
+		return nil, sdkerrors.Wrap(err, "failed to validate incoming RegisterInterchainKVQuery message")
 	}
 
-	response, err := m.Icqmsgserver.RegisterInterchainQuery(sdk.WrapSDKContext(ctx), &msg)
+	response, err := m.Icqmsgserver.RegisterInterchainKVQuery(sdk.WrapSDKContext(ctx), &msg)
 	if err != nil {
 		return nil, sdkerrors.Wrap(err, "failed to register interchain query")
 	}

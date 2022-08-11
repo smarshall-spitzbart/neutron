@@ -33,10 +33,10 @@ func GetTxCmd() *cobra.Command {
 
 func RegisterInterchainQueryCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:     "register-interchain-query [zone-id] [connection-id] [update-period] [query-type] [query-data]",
+		Use:     "register-interchain-query [zone-id] [connection-id] [update-period] [query-data]",
 		Short:   "Register an interchain query",
 		Aliases: []string{"register", "r"},
-		Args:    cobra.ExactArgs(5),
+		Args:    cobra.ExactArgs(4),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx, err := client.GetClientTxContext(cmd)
 			if err != nil {
@@ -55,31 +55,16 @@ func RegisterInterchainQueryCmd() *cobra.Command {
 				return fmt.Errorf("invalid query type: must be %s or %s, got %s", types.InterchainQueryTypeKV, types.InterchainQueryTypeTX, queryType)
 			}
 
-			queryData := args[4]
-
 			var (
-				txFilter string
-				kvKeys   []*types.KVKey
+				kvKeys []*types.KVKey
 			)
 
-			switch queryType {
-			case types.InterchainQueryTypeKV:
-				kvKeys, err = types.KVKeysFromString(queryData)
-				if err != nil {
-					return fmt.Errorf("failed to parse KV keys from string: %w", err)
-				}
-			case types.InterchainQueryTypeTX:
-				txFilter = queryData
-			}
-
-			msg := types.MsgRegisterInterchainQuery{
-				TransactionsFilter: txFilter,
-				Keys:               kvKeys,
-				QueryType:          string(queryType),
-				ZoneId:             zoneID,
-				ConnectionId:       connectionID,
-				UpdatePeriod:       updatePeriod,
-				Sender:             sender.String(),
+			msg := types.MsgRegisterInterchainKVQuery{
+				Keys:         kvKeys,
+				ZoneId:       zoneID,
+				ConnectionId: connectionID,
+				UpdatePeriod: updatePeriod,
+				Sender:       sender.String(),
 			}
 			if err = msg.ValidateBasic(); err != nil {
 				return err
@@ -119,7 +104,7 @@ func SubmitQueryResultCmd() *cobra.Command {
 				return fmt.Errorf("failed to read query result file: %w", err)
 			}
 
-			msg := types.MsgSubmitQueryResult{QueryId: queryID, Sender: string(sender)}
+			msg := types.MsgSubmitKVQueryResult{QueryId: queryID, Sender: string(sender)}
 			if err := json.Unmarshal(result, &msg.Result); err != nil {
 				return fmt.Errorf("failed to unmarshal query result: %w", err)
 			}

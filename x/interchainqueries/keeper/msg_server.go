@@ -27,62 +27,96 @@ func NewMsgServerImpl(keeper Keeper) types.MsgServer {
 	return &msgServer{Keeper: keeper}
 }
 
-func (k msgServer) RegisterInterchainQuery(goCtx context.Context, msg *types.MsgRegisterInterchainQuery) (*types.MsgRegisterInterchainQueryResponse, error) {
+func (k msgServer) RegisterInterchainKVQuery(goCtx context.Context, msg *types.MsgRegisterInterchainKVQuery) (*types.MsgRegisterInterchainQueryResponse, error) {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), LabelRegisterInterchainQuery)
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
-	ctx.Logger().Debug("RegisterInterchainQuery", "msg", msg)
+	ctx.Logger().Debug("RegisterInterchainKVQuery", "msg", msg)
 
 	if err := msg.ValidateBasic(); err != nil {
-		ctx.Logger().Debug("RegisterInterchainQuery: failed to validate message", "message", msg)
+		ctx.Logger().Debug("RegisterInterchainKVQuery: failed to validate message", "message", msg)
 		return nil, sdkerrors.Wrapf(err, "invalid msg: %v", err)
 	}
 
 	if _, err := k.ibcKeeper.ConnectionKeeper.Connection(goCtx, &ibcconnectiontypes.QueryConnectionRequest{ConnectionId: msg.ConnectionId}); err != nil {
-		ctx.Logger().Debug("RegisterInterchainQuery: failed to get connection with ID", "message", msg)
+		ctx.Logger().Debug("RegisterInterchainKVQuery: failed to get connection with ID", "message", msg)
 		return nil, sdkerrors.Wrapf(types.ErrInvalidConnectionID, "failed to get connection with ID '%s': %v", msg.ConnectionId, err)
 	}
 
-	lastID := k.GetLastRegisteredQueryKey(ctx)
+	lastID := k.GetLastRegisteredKVQueryKey(ctx)
 	lastID += 1
 
-	registeredQuery := types.RegisteredQuery{
-		Id:                 lastID,
-		Owner:              msg.Sender,
-		TransactionsFilter: msg.TransactionsFilter,
-		Keys:               msg.Keys,
-		QueryType:          msg.QueryType,
-		ZoneId:             msg.ZoneId,
-		UpdatePeriod:       msg.UpdatePeriod,
-		ConnectionId:       msg.ConnectionId,
-		LastEmittedHeight:  uint64(ctx.BlockHeight()),
+	registeredQuery := types.RegisteredKVQuery{
+		Id:                lastID,
+		Owner:             msg.Sender,
+		Keys:              msg.Keys,
+		ZoneId:            msg.ZoneId,
+		UpdatePeriod:      msg.UpdatePeriod,
+		ConnectionId:      msg.ConnectionId,
+		LastEmittedHeight: uint64(ctx.BlockHeight()),
 	}
 
-	k.SetLastRegisteredQueryKey(ctx, lastID)
-	if err := k.SaveQuery(ctx, registeredQuery); err != nil {
-		ctx.Logger().Debug("RegisterInterchainQuery: failed to save query", "message", &msg, "error", err)
+	k.SetLastRegisteredKVQueryKey(ctx, lastID)
+	if err := k.SaveKVQuery(ctx, registeredQuery); err != nil {
+		ctx.Logger().Debug("RegisterInterchainKVQuery: failed to save query", "message", &msg, "error", err)
 		return nil, sdkerrors.Wrapf(err, "failed to save query: %v", err)
 	}
 
 	return &types.MsgRegisterInterchainQueryResponse{Id: lastID}, nil
 }
 
-func (k msgServer) SubmitQueryResult(goCtx context.Context, msg *types.MsgSubmitQueryResult) (*types.MsgSubmitQueryResultResponse, error) {
+func (k msgServer) RegisterInterchainTXQuery(goCtx context.Context, msg *types.MsgRegisterInterchainTXQuery) (*types.MsgRegisterInterchainQueryResponse, error) {
+	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), LabelRegisterInterchainQuery)
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+	ctx.Logger().Debug("RegisterInterchainTXQuery", "msg", msg)
+
+	if err := msg.ValidateBasic(); err != nil {
+		ctx.Logger().Debug("RegisterInterchainTXQuery: failed to validate message", "message", msg)
+		return nil, sdkerrors.Wrapf(err, "invalid msg: %v", err)
+	}
+
+	if _, err := k.ibcKeeper.ConnectionKeeper.Connection(goCtx, &ibcconnectiontypes.QueryConnectionRequest{ConnectionId: msg.ConnectionId}); err != nil {
+		ctx.Logger().Debug("RegisterInterchainTXQuery: failed to get connection with ID", "message", msg)
+		return nil, sdkerrors.Wrapf(types.ErrInvalidConnectionID, "failed to get connection with ID '%s': %v", msg.ConnectionId, err)
+	}
+
+	lastID := k.GetLastRegisteredKVQueryKey(ctx)
+	lastID += 1
+
+	registeredQuery := types.RegisteredTXQuery{
+		Id:                 lastID,
+		Owner:              msg.Sender,
+		ZoneId:             msg.ZoneId,
+		ConnectionId:       msg.ConnectionId,
+		TransactionsFilter: msg.TransactionsFilter,
+	}
+
+	k.SetLastRegisteredTXQueryKey(ctx, lastID)
+	if err := k.SaveTXQuery(ctx, registeredQuery); err != nil {
+		ctx.Logger().Debug("RegisterInterchainTXQuery: failed to save query", "message", &msg, "error", err)
+		return nil, sdkerrors.Wrapf(err, "failed to save query: %v", err)
+	}
+
+	return &types.MsgRegisterInterchainQueryResponse{Id: lastID}, nil
+}
+
+func (k msgServer) SubmitKVQueryResult(goCtx context.Context, msg *types.MsgSubmitKVQueryResult) (*types.MsgSubmitQueryResultResponse, error) {
 	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), LabelRegisterInterchainQuery)
 
 	ctx := sdk.UnwrapSDKContext(goCtx)
 
-	ctx.Logger().Debug("SubmitQueryResult", "query_id", msg.QueryId)
+	ctx.Logger().Debug("SubmitKVQueryResult", "query_id", msg.QueryId)
 
 	if err := msg.ValidateBasic(); err != nil {
-		ctx.Logger().Debug("SubmitQueryResult: failed to validate message",
+		ctx.Logger().Debug("SubmitKVQueryResult: failed to validate message",
 			"error", err, "message", msg)
 		return nil, sdkerrors.Wrapf(err, "invalid msg: %v", err)
 	}
 
-	query, err := k.GetQueryByID(ctx, msg.QueryId)
+	query, err := k.GetKVQueryByID(ctx, msg.QueryId)
 	if err != nil {
-		ctx.Logger().Debug("SubmitQueryResult: failed to GetQueryByID",
+		ctx.Logger().Debug("SubmitKVQueryResult: failed to GetKVQueryByID",
 			"error", err, "query_id", msg.QueryId)
 		return nil, sdkerrors.Wrapf(err, "failed to get query by id: %v", err)
 	}
@@ -91,110 +125,122 @@ func (k msgServer) SubmitQueryResult(goCtx context.Context, msg *types.MsgSubmit
 		return nil, sdkerrors.Wrapf(types.ErrInvalidSubmittedResult, "KV keys length from result is not equal to registered query keys length: %v != %v", len(msg.Result.KvResults), query.Keys)
 	}
 
+	resp, err := k.ibcKeeper.ConnectionConsensusState(goCtx, &ibcconnectiontypes.QueryConnectionConsensusStateRequest{
+		ConnectionId:   query.ConnectionId,
+		RevisionNumber: msg.Result.Revision,
+		RevisionHeight: msg.Result.Height + 1,
+	})
+	if err != nil {
+		ctx.Logger().Debug("SubmitKVQueryResult: failed to get ConnectionConsensusState",
+			"error", err, "query", query, "message", msg)
+		return nil, sdkerrors.Wrapf(ibcclienttypes.ErrConsensusStateNotFound, "failed to get consensus state: %v", err)
+	}
+
+	consensusState, err := ibcclienttypes.UnpackConsensusState(resp.ConsensusState)
+	if err != nil {
+		ctx.Logger().Error("SubmitKVQueryResult: failed to UnpackConsensusState",
+			"error", err, "query", query, "message", msg)
+		return nil, sdkerrors.Wrapf(types.ErrProtoUnmarshal, "failed to unpack consesus state: %v", err)
+	}
+
+	for index, result := range msg.Result.KvResults {
+		proof, err := ibccommitmenttypes.ConvertProofs(result.Proof)
+		if err != nil {
+			ctx.Logger().Debug("SubmitKVQueryResult: failed to ConvertProofs",
+				"error", err, "query", query, "message", msg)
+			return nil, sdkerrors.Wrapf(types.ErrInvalidType, "failed to convert crypto.ProofOps to MerkleProof: %v", err)
+		}
+
+		if !bytes.Equal(result.Key, query.Keys[index].Key) {
+			return nil, sdkerrors.Wrapf(types.ErrInvalidSubmittedResult, "KV key from result is not equal to registered query key: %v != %v", result.Key, query.Keys[index].Key)
+		}
+
+		if result.StoragePrefix != query.Keys[index].Path {
+			return nil, sdkerrors.Wrapf(types.ErrInvalidSubmittedResult, "KV path from result is not equal to registered query storage prefix: %v != %v", result.StoragePrefix, query.Keys[index].Path)
+		}
+
+		path := ibccommitmenttypes.NewMerklePath(result.StoragePrefix, string(result.Key))
+
+		// identify what kind proofs (non-existence proof always has *ics23.CommitmentProof_Nonexist as the first item) we got
+		// and call corresponding method to verify it
+		switch proof.GetProofs()[0].GetProof().(type) {
+		// we can get non-existence proof if someone queried some key which is not exists in the storage on remote chain
+		case *ics23.CommitmentProof_Nonexist:
+			if err := proof.VerifyNonMembership(ibccommitmenttypes.GetSDKSpecs(), consensusState.GetRoot(), path); err != nil {
+				ctx.Logger().Debug("SubmitKVQueryResult: failed to VerifyNonMembership",
+					"error", err, "query", query, "message", msg, "path", path)
+				return nil, sdkerrors.Wrapf(types.ErrInvalidProof, "failed to verify proof: %v", err)
+			}
+			result.Value = nil
+		case *ics23.CommitmentProof_Exist:
+			if err := proof.VerifyMembership(ibccommitmenttypes.GetSDKSpecs(), consensusState.GetRoot(), path, result.Value); err != nil {
+				ctx.Logger().Debug("SubmitKVQueryResult: failed to VerifyMembership",
+					"error", err, "query", query, "message", msg, "path", path)
+				return nil, sdkerrors.Wrapf(types.ErrInvalidProof, "failed to verify proof: %v", err)
+			}
+		default:
+			return nil, sdkerrors.Wrapf(types.ErrInvalidProof, "unknown proof type %T", proof.GetProofs()[0].GetProof())
+		}
+	}
+
 	queryOwner, err := sdk.AccAddressFromBech32(query.Owner)
 	if err != nil {
-		ctx.Logger().Error("SubmitQueryResult: failed to decode AccAddressFromBech32",
+		ctx.Logger().Error("SubmitKVQueryResult: failed to decode AccAddressFromBech32",
+			"error", err, "query", query, "message", msg)
+		return nil, sdkerrors.Wrapf(types.ErrInternal, "failed to decode owner contract address: %v", err)
+	}
+
+	if err = k.SaveKVQueryResult(ctx, msg.QueryId, msg.Result); err != nil {
+		ctx.Logger().Error("SubmitKVQueryResult: failed to SaveKVQueryResult",
+			"error", err, "query", query, "message", msg)
+		return nil, sdkerrors.Wrapf(err, "failed to SaveKVQueryResult: %v", err)
+	}
+
+	if msg.Result.GetAllowKvCallbacks() {
+		// Let the query owner contract process the query result.
+		if _, err := k.sudoHandler.SudoKVQueryResult(ctx, queryOwner, query.Id); err != nil {
+			ctx.Logger().Debug("SubmitKVQueryResult: failed to SudoKVQueryResult",
+				"error", err, "query_id", query.GetId())
+			return nil, sdkerrors.Wrapf(err, "contract %s rejected KV query result (query_id: %d)",
+				queryOwner, query.GetId())
+		}
+		return &types.MsgSubmitQueryResultResponse{}, nil
+	}
+
+	return &types.MsgSubmitQueryResultResponse{}, nil
+}
+
+func (k msgServer) SubmitTXQueryResult(goCtx context.Context, msg *types.MsgSubmitTXQueryResult) (*types.MsgSubmitQueryResultResponse, error) {
+	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), LabelRegisterInterchainQuery)
+
+	ctx := sdk.UnwrapSDKContext(goCtx)
+
+	ctx.Logger().Debug("SubmitTXQueryResult", "query_id", msg.QueryId)
+
+	if err := msg.ValidateBasic(); err != nil {
+		ctx.Logger().Debug("SubmitTXQueryResult: failed to validate message",
+			"error", err, "message", msg)
+		return nil, sdkerrors.Wrapf(err, "invalid msg: %v", err)
+	}
+
+	query, err := k.GetTXQueryByID(ctx, msg.QueryId)
+	if err != nil {
+		ctx.Logger().Debug("SubmitTXQueryResult: failed to GetTXQueryByID",
+			"error", err, "query_id", msg.QueryId)
+		return nil, sdkerrors.Wrapf(err, "failed to get query by id: %v", err)
+	}
+
+	queryOwner, err := sdk.AccAddressFromBech32(query.Owner)
+	if err != nil {
+		ctx.Logger().Error("SubmitTXQueryResult: failed to decode AccAddressFromBech32",
 			"error", err, "query", query, "message", msg)
 		return nil, sdkerrors.Wrapf(err, "failed to decode owner contract address (%s)", query.Owner)
 	}
 
-	if msg.Result.KvResults != nil {
-		if !types.InterchainQueryType(query.QueryType).IsKV() {
-			return nil, sdkerrors.Wrapf(types.ErrInvalidType, "invalid query result for query type: %s", query.QueryType)
-		}
-
-		resp, err := k.ibcKeeper.ConnectionConsensusState(goCtx, &ibcconnectiontypes.QueryConnectionConsensusStateRequest{
-			ConnectionId:   query.ConnectionId,
-			RevisionNumber: msg.Result.Revision,
-			RevisionHeight: msg.Result.Height + 1,
-		})
-		if err != nil {
-			ctx.Logger().Debug("SubmitQueryResult: failed to get ConnectionConsensusState",
-				"error", err, "query", query, "message", msg)
-			return nil, sdkerrors.Wrapf(ibcclienttypes.ErrConsensusStateNotFound, "failed to get consensus state: %v", err)
-		}
-
-		consensusState, err := ibcclienttypes.UnpackConsensusState(resp.ConsensusState)
-		if err != nil {
-			ctx.Logger().Error("SubmitQueryResult: failed to UnpackConsensusState",
-				"error", err, "query", query, "message", msg)
-			return nil, sdkerrors.Wrapf(types.ErrProtoUnmarshal, "failed to unpack consesus state: %v", err)
-		}
-
-		for index, result := range msg.Result.KvResults {
-			proof, err := ibccommitmenttypes.ConvertProofs(result.Proof)
-			if err != nil {
-				ctx.Logger().Debug("SubmitQueryResult: failed to ConvertProofs",
-					"error", err, "query", query, "message", msg)
-				return nil, sdkerrors.Wrapf(types.ErrInvalidType, "failed to convert crypto.ProofOps to MerkleProof: %v", err)
-			}
-
-			if !bytes.Equal(result.Key, query.Keys[index].Key) {
-				return nil, sdkerrors.Wrapf(types.ErrInvalidSubmittedResult, "KV key from result is not equal to registered query key: %v != %v", result.Key, query.Keys[index].Key)
-			}
-
-			if result.StoragePrefix != query.Keys[index].Path {
-				return nil, sdkerrors.Wrapf(types.ErrInvalidSubmittedResult, "KV path from result is not equal to registered query storage prefix: %v != %v", result.StoragePrefix, query.Keys[index].Path)
-			}
-
-			path := ibccommitmenttypes.NewMerklePath(result.StoragePrefix, string(result.Key))
-
-			// identify what kind proofs (non-existence proof always has *ics23.CommitmentProof_Nonexist as the first item) we got
-			// and call corresponding method to verify it
-			switch proof.GetProofs()[0].GetProof().(type) {
-			// we can get non-existence proof if someone queried some key which is not exists in the storage on remote chain
-			case *ics23.CommitmentProof_Nonexist:
-				if err := proof.VerifyNonMembership(ibccommitmenttypes.GetSDKSpecs(), consensusState.GetRoot(), path); err != nil {
-					ctx.Logger().Debug("SubmitQueryResult: failed to VerifyNonMembership",
-						"error", err, "query", query, "message", msg, "path", path)
-					return nil, sdkerrors.Wrapf(types.ErrInvalidProof, "failed to verify proof: %v", err)
-				}
-				result.Value = nil
-			case *ics23.CommitmentProof_Exist:
-				if err := proof.VerifyMembership(ibccommitmenttypes.GetSDKSpecs(), consensusState.GetRoot(), path, result.Value); err != nil {
-					ctx.Logger().Debug("SubmitQueryResult: failed to VerifyMembership",
-						"error", err, "query", query, "message", msg, "path", path)
-					return nil, sdkerrors.Wrapf(types.ErrInvalidProof, "failed to verify proof: %v", err)
-				}
-			default:
-				return nil, sdkerrors.Wrapf(types.ErrInvalidProof, "unknown proof type %T", proof.GetProofs()[0].GetProof())
-			}
-
-			queryOwner, err := sdk.AccAddressFromBech32(query.Owner)
-			if err != nil {
-				ctx.Logger().Error("SubmitQueryResult: failed to decode AccAddressFromBech32",
-					"error", err, "query", query, "message", msg)
-				return nil, sdkerrors.Wrapf(types.ErrInternal, "failed to decode owner contract address: %v", err)
-			}
-
-			if err = k.SaveKVQueryResult(ctx, msg.QueryId, msg.Result); err != nil {
-				ctx.Logger().Error("SubmitQueryResult: failed to SaveKVQueryResult",
-					"error", err, "query", query, "message", msg)
-				return nil, sdkerrors.Wrapf(err, "failed to SaveKVQueryResult: %v", err)
-			}
-
-			if msg.Result.GetAllowKvCallbacks() {
-				// Let the query owner contract process the query result.
-				if _, err := k.sudoHandler.SudoKVQueryResult(ctx, queryOwner, query.Id); err != nil {
-					ctx.Logger().Debug("SubmitQueryResult: failed to SudoKVQueryResult",
-						"error", err, "query_id", query.GetId())
-					return nil, sdkerrors.Wrapf(err, "contract %s rejected KV query result (query_id: %d)",
-						queryOwner, query.GetId())
-				}
-				return &types.MsgSubmitQueryResultResponse{}, nil
-			}
-		}
-	}
-
-	if msg.Result.Block != nil && msg.Result.Block.Tx != nil {
-		if !types.InterchainQueryType(query.QueryType).IsTX() {
-			return nil, sdkerrors.Wrapf(types.ErrInvalidType, "invalid query result for query type: %s", query.QueryType)
-		}
-		if err := k.ProcessBlock(ctx, queryOwner, msg.QueryId, msg.ClientId, msg.Result.Block); err != nil {
-			ctx.Logger().Debug("SubmitQueryResult: failed to ProcessBlock",
-				"error", err, "query", query, "message", msg)
-			return nil, sdkerrors.Wrapf(err, "failed to ProcessBlock: %v", err)
-		}
+	if err := k.ProcessBlock(ctx, queryOwner, msg.QueryId, msg.ClientId, msg.Block); err != nil {
+		ctx.Logger().Debug("SubmitTXQueryResult: failed to ProcessBlock",
+			"error", err, "query", query, "message", msg)
+		return nil, sdkerrors.Wrapf(err, "failed to ProcessBlock: %v", err)
 	}
 
 	return &types.MsgSubmitQueryResultResponse{}, nil

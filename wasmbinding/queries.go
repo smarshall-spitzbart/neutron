@@ -10,7 +10,7 @@ import (
 )
 
 func (qp *QueryPlugin) GetInterchainQueryResult(ctx sdk.Context, queryID uint64) (*bindings.QueryRegisteredQueryResultResponse, error) {
-	grpcResp, err := qp.icqKeeper.GetQueryResultByID(ctx, queryID)
+	grpcResp, err := qp.icqKeeper.GetKVQueryResultByID(ctx, queryID)
 	if err != nil {
 		return nil, err
 	}
@@ -48,7 +48,7 @@ func (qp *QueryPlugin) GetInterchainAccountAddress(ctx sdk.Context, req *binding
 }
 
 func (qp *QueryPlugin) GetRegisteredInterchainQueries(ctx sdk.Context) (*bindings.QueryRegisteredQueriesResponse, error) {
-	grpcResp, err := qp.icqKeeper.GetRegisteredQueries(ctx, &types.QueryRegisteredQueriesRequest{})
+	grpcResp, err := qp.icqKeeper.GetRegisteredKVQueries(ctx, &types.QueryRegisteredKVQueriesRequest{})
 	if err != nil {
 		return nil, err
 	}
@@ -62,7 +62,7 @@ func (qp *QueryPlugin) GetRegisteredInterchainQueries(ctx sdk.Context) (*binding
 }
 
 func (qp *QueryPlugin) GetRegisteredInterchainQuery(ctx sdk.Context, req *bindings.QueryRegisteredQueryRequest) (*bindings.QueryRegisteredQueryResponse, error) {
-	grpcResp, err := qp.icqKeeper.GetQueryByID(ctx, req.QueryId)
+	grpcResp, err := qp.icqKeeper.GetKVQueryByID(ctx, req.QueryId)
 	if err != nil {
 		return nil, err
 	}
@@ -74,13 +74,11 @@ func (qp *QueryPlugin) GetRegisteredInterchainQuery(ctx sdk.Context, req *bindin
 	return &bindings.QueryRegisteredQueryResponse{RegisteredQuery: &query}, nil
 }
 
-func mapGRPCRegisteredQueryToWasmBindings(grpcQuery types.RegisteredQuery) bindings.RegisteredQuery {
+func mapGRPCRegisteredQueryToWasmBindings(grpcQuery types.RegisteredKVQuery) bindings.RegisteredQuery {
 	return bindings.RegisteredQuery{
 		Id:                              grpcQuery.GetId(),
 		Owner:                           grpcQuery.GetOwner(),
 		Keys:                            grpcQuery.GetKeys(),
-		TransactionsFilter:              grpcQuery.GetTransactionsFilter(),
-		QueryType:                       grpcQuery.GetQueryType(),
 		ZoneId:                          grpcQuery.GetZoneId(),
 		ConnectionId:                    grpcQuery.GetConnectionId(),
 		UpdatePeriod:                    grpcQuery.GetUpdatePeriod(),

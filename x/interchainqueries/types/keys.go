@@ -20,25 +20,33 @@ const (
 )
 
 const (
-	prefixRegisteredQuery = iota + 1
+	prefixRegisteredKVQuery = iota + 1
+	prefixRegisteredTXQuery
 	prefixRegisteredQueryResult
 
 	prefixSubmittedTx
 )
 
 var (
-	RegisteredQueryKey       = []byte{prefixRegisteredQuery}
-	RegisteredQueryResultKey = []byte{prefixRegisteredQueryResult}
+	RegisteredKVQueryKey       = []byte{prefixRegisteredKVQuery}
+	RegisteredKVQueryResultKey = []byte{prefixRegisteredQueryResult}
+
+	RegisteredTXQueryKey = []byte{prefixRegisteredKVQuery}
 
 	SubmittedTxKey = []byte{prefixSubmittedTx}
 
-	LastRegisteredQueryIdKey = []byte{0x64}
+	LastRegisteredKVQueryIdKey = []byte{0x64}
+	LastRegisteredTXQueryIdKey = []byte{0x65}
 
-	LastSubmittedTransactionIDKey = []byte{0x65}
+	LastSubmittedTransactionIDKey = []byte{0x66}
 )
 
-func GetRegisteredQueryByIDKey(id uint64) []byte {
-	return append(RegisteredQueryKey, sdk.Uint64ToBigEndian(id)...)
+func GetRegisteredKVQueryByIDKey(id uint64) []byte {
+	return append(RegisteredKVQueryKey, sdk.Uint64ToBigEndian(id)...)
+}
+
+func GetRegisteredTXQueryByIDKey(id uint64) []byte {
+	return append(RegisteredTXQueryKey, sdk.Uint64ToBigEndian(id)...)
 }
 
 func GetSubmittedTransactionIDForQueryKeyPrefix(queryID uint64) []byte {
@@ -50,5 +58,5 @@ func GetSubmittedTransactionIDForQueryKey(queryID uint64, txHash []byte) []byte 
 }
 
 func GetRegisteredQueryResultByIDKey(id uint64) []byte {
-	return append(RegisteredQueryResultKey, sdk.Uint64ToBigEndian(id)...)
+	return append(RegisteredKVQueryResultKey, sdk.Uint64ToBigEndian(id)...)
 }
