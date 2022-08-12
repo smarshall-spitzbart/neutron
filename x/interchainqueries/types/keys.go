@@ -35,18 +35,15 @@ var (
 
 	SubmittedTxKey = []byte{prefixSubmittedTx}
 
-	LastRegisteredKVQueryIdKey = []byte{0x64}
-	LastRegisteredTXQueryIdKey = []byte{0x65}
-
-	LastSubmittedTransactionIDKey = []byte{0x66}
+	LastRegisteredQueryIdKey = []byte{0x64}
 )
 
-func GetRegisteredKVQueryByIDKey(id uint64) []byte {
-	return append(RegisteredKVQueryKey, sdk.Uint64ToBigEndian(id)...)
+func GetLastRegisteredQueryIdKey(queryKey []byte) []byte {
+	return append(LastRegisteredQueryIdKey, queryKey...)
 }
 
-func GetRegisteredTXQueryByIDKey(id uint64) []byte {
-	return append(RegisteredTXQueryKey, sdk.Uint64ToBigEndian(id)...)
+func GetRegisteredQueryByIDKey(queryKey []byte, id uint64) []byte {
+	return append(queryKey, sdk.Uint64ToBigEndian(id)...)
 }
 
 func GetSubmittedTransactionIDForQueryKeyPrefix(queryID uint64) []byte {

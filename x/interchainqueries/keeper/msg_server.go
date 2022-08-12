@@ -43,7 +43,9 @@ func (k msgServer) RegisterInterchainKVQuery(goCtx context.Context, msg *types.M
 		return nil, sdkerrors.Wrapf(types.ErrInvalidConnectionID, "failed to get connection with ID '%s': %v", msg.ConnectionId, err)
 	}
 
-	lastID := k.GetLastRegisteredKVQueryKey(ctx)
+	qs := NewKVQueryStorage(&k.Keeper)
+
+	lastID := qs.GetLastRegisteredQueryID(ctx)
 	lastID += 1
 
 	registeredQuery := types.RegisteredKVQuery{
@@ -56,8 +58,8 @@ func (k msgServer) RegisterInterchainKVQuery(goCtx context.Context, msg *types.M
 		LastEmittedHeight: uint64(ctx.BlockHeight()),
 	}
 
-	k.SetLastRegisteredKVQueryKey(ctx, lastID)
-	if err := k.SaveKVQuery(ctx, registeredQuery); err != nil {
+	qs.SetLastRegisteredQueryID(ctx, lastID)
+	if err := qs.SaveQuery(ctx, &registeredQuery); err != nil {
 		ctx.Logger().Debug("RegisterInterchainKVQuery: failed to save query", "message", &msg, "error", err)
 		return nil, sdkerrors.Wrapf(err, "failed to save query: %v", err)
 	}
@@ -81,7 +83,9 @@ func (k msgServer) RegisterInterchainTXQuery(goCtx context.Context, msg *types.M
 		return nil, sdkerrors.Wrapf(types.ErrInvalidConnectionID, "failed to get connection with ID '%s': %v", msg.ConnectionId, err)
 	}
 
-	lastID := k.GetLastRegisteredKVQueryKey(ctx)
+	qs := NewTXQueryStorage(&k.Keeper)
+
+	lastID := qs.GetLastRegisteredQueryID(ctx)
 	lastID += 1
 
 	registeredQuery := types.RegisteredTXQuery{
@@ -92,8 +96,8 @@ func (k msgServer) RegisterInterchainTXQuery(goCtx context.Context, msg *types.M
 		TransactionsFilter: msg.TransactionsFilter,
 	}
 
-	k.SetLastRegisteredTXQueryKey(ctx, lastID)
-	if err := k.SaveTXQuery(ctx, registeredQuery); err != nil {
+	qs.SetLastRegisteredQueryID(ctx, lastID)
+	if err := qs.SaveQuery(ctx, &registeredQuery); err != nil {
 		ctx.Logger().Debug("RegisterInterchainTXQuery: failed to save query", "message", &msg, "error", err)
 		return nil, sdkerrors.Wrapf(err, "failed to save query: %v", err)
 	}
@@ -114,7 +118,9 @@ func (k msgServer) SubmitKVQueryResult(goCtx context.Context, msg *types.MsgSubm
 		return nil, sdkerrors.Wrapf(err, "invalid msg: %v", err)
 	}
 
-	query, err := k.GetKVQueryByID(ctx, msg.QueryId)
+	qs := NewKVQueryStorage(&k.Keeper)
+
+	query, err := qs.GetQueryByID(ctx, msg.QueryId)
 	if err != nil {
 		ctx.Logger().Debug("SubmitKVQueryResult: failed to GetKVQueryByID",
 			"error", err, "query_id", msg.QueryId)
@@ -223,7 +229,9 @@ func (k msgServer) SubmitTXQueryResult(goCtx context.Context, msg *types.MsgSubm
 		return nil, sdkerrors.Wrapf(err, "invalid msg: %v", err)
 	}
 
-	query, err := k.GetTXQueryByID(ctx, msg.QueryId)
+	qs := NewKVQueryStorage(&k.Keeper)
+
+	query, err := qs.GetQueryByID(ctx, msg.QueryId)
 	if err != nil {
 		ctx.Logger().Debug("SubmitTXQueryResult: failed to GetTXQueryByID",
 			"error", err, "query_id", msg.QueryId)

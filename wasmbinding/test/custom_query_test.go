@@ -16,6 +16,7 @@ import (
 
 	"github.com/neutron-org/neutron/testutil"
 	"github.com/neutron-org/neutron/wasmbinding/bindings"
+	keeper2 "github.com/neutron-org/neutron/x/interchainqueries/keeper"
 	icqtypes "github.com/neutron-org/neutron/x/interchainqueries/types"
 	ictxtypes "github.com/neutron-org/neutron/x/interchaintxs/types"
 )
@@ -37,8 +38,9 @@ func (suite *CustomQuerierTestSuite) TestInterchainQueryResult() {
 
 	// Register and submit query result
 	clientKey := host.FullClientStateKey(suite.Path.EndpointB.ClientID)
-	lastID := neutron.InterchainQueriesKeeper.GetLastRegisteredKVQueryKey(ctx) + 1
-	neutron.InterchainQueriesKeeper.SetLastRegisteredKVQueryKey(ctx, lastID)
+	qs := keeper2.NewKVQueryStorage(&neutron.InterchainQueriesKeeper)
+	lastID := qs.GetLastRegisteredQueryID(ctx) + 1
+	qs.SetLastRegisteredQueryID(ctx, lastID)
 	registeredQuery := icqtypes.RegisteredKVQuery{
 		Id: lastID,
 		Keys: []*icqtypes.KVKey{
@@ -49,8 +51,8 @@ func (suite *CustomQuerierTestSuite) TestInterchainQueryResult() {
 		ConnectionId:      suite.Path.EndpointA.ConnectionID,
 		LastEmittedHeight: uint64(ctx.BlockHeight()),
 	}
-	neutron.InterchainQueriesKeeper.SetLastRegisteredKVQueryKey(ctx, lastID)
-	err := neutron.InterchainQueriesKeeper.SaveKVQuery(ctx, registeredQuery)
+	qs.SetLastRegisteredQueryID(ctx, lastID)
+	err := qs.SaveQuery(ctx, &registeredQuery)
 	suite.Require().NoError(err)
 
 	chainBResp := suite.ChainB.App.Query(abci.RequestQuery{

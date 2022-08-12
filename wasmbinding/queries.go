@@ -5,6 +5,7 @@ import (
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/neutron-org/neutron/wasmbinding/bindings"
+	"github.com/neutron-org/neutron/x/interchainqueries/keeper"
 	"github.com/neutron-org/neutron/x/interchainqueries/types"
 	icatypes "github.com/neutron-org/neutron/x/interchaintxs/types"
 )
@@ -62,7 +63,9 @@ func (qp *QueryPlugin) GetRegisteredInterchainQueries(ctx sdk.Context) (*binding
 }
 
 func (qp *QueryPlugin) GetRegisteredInterchainQuery(ctx sdk.Context, req *bindings.QueryRegisteredQueryRequest) (*bindings.QueryRegisteredQueryResponse, error) {
-	grpcResp, err := qp.icqKeeper.GetKVQueryByID(ctx, req.QueryId)
+	qs := keeper.NewKVQueryStorage(qp.icqKeeper)
+
+	grpcResp, err := qs.GetQueryByID(ctx, req.QueryId)
 	if err != nil {
 		return nil, err
 	}

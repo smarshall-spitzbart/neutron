@@ -1,56 +1,11 @@
 package keeper
 
 import (
-	"github.com/cosmos/cosmos-sdk/store/prefix"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
 	"github.com/neutron-org/neutron/x/interchainqueries/types"
 )
-
-func (k Keeper) GetLastRegisteredKVQueryKey(ctx sdk.Context) uint64 {
-	store := ctx.KVStore(k.storeKey)
-	bytes := store.Get(types.LastRegisteredKVQueryIdKey)
-	if bytes == nil {
-		k.Logger(ctx).Debug("Last registered query key doesn't exist, GetLastRegisteredKVQueryKey returns 0")
-		return 0
-	}
-	return sdk.BigEndianToUint64(bytes)
-}
-
-func (k Keeper) SetLastRegisteredKVQueryKey(ctx sdk.Context, id uint64) {
-	store := ctx.KVStore(k.storeKey)
-	store.Set(types.LastRegisteredKVQueryIdKey, sdk.Uint64ToBigEndian(id))
-}
-
-func (k Keeper) SaveKVQuery(ctx sdk.Context, query types.RegisteredKVQuery) error {
-	store := ctx.KVStore(k.storeKey)
-
-	bz, err := k.cdc.Marshal(&query)
-	if err != nil {
-		return sdkerrors.Wrapf(types.ErrProtoMarshal, "failed to marshal registered query: %v", err)
-	}
-
-	store.Set(types.GetRegisteredKVQueryByIDKey(query.Id), bz)
-	k.Logger(ctx).Debug("SaveKVQuery successful", "query", query)
-	return nil
-}
-
-func (k Keeper) GetKVQueryByID(ctx sdk.Context, id uint64) (*types.RegisteredKVQuery, error) {
-	store := ctx.KVStore(k.storeKey)
-
-	bz := store.Get(types.GetRegisteredKVQueryByIDKey(id))
-	if bz == nil {
-		return nil, sdkerrors.Wrapf(types.ErrInvalidQueryID, "there is no query with id: %v", id)
-	}
-
-	var query types.RegisteredKVQuery
-	if err := k.cdc.Unmarshal(bz, &query); err != nil {
-		return nil, sdkerrors.Wrapf(types.ErrProtoUnmarshal, "failed to unmarshal registered query: %v", err)
-	}
-
-	return &query, nil
-}
 
 func (k Keeper) SaveKVQueryResult(ctx sdk.Context, id uint64, result *types.QueryResult) error {
 	store := ctx.KVStore(k.storeKey)
@@ -114,34 +69,24 @@ func (k Keeper) GetKVQueryResultByID(ctx sdk.Context, id uint64) (*types.QueryRe
 }
 
 func (k Keeper) UpdateLastLocalHeight(ctx sdk.Context, queryID uint64, newLocalHeight uint64) error {
-	store := ctx.KVStore(k.storeKey)
+	qs := NewKVQueryStorage(&k)
 
-	bz := store.Get(types.GetRegisteredKVQueryByIDKey(queryID))
-	if bz == nil {
-		return sdkerrors.Wrapf(types.ErrInvalidQueryID, "query with ID %d not found", queryID)
-	}
-
-	var query types.RegisteredKVQuery
-	if err := k.cdc.Unmarshal(bz, &query); err != nil {
-		return sdkerrors.Wrapf(types.ErrProtoUnmarshal, "failed to unmarshal registered query: %v", err)
+	query, err := qs.GetQueryByID(ctx, queryID)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "failed to get query by id: %d", queryID)
 	}
 
 	query.LastSubmittedResultLocalHeight = newLocalHeight
 
-	return k.SaveKVQuery(ctx, query)
+	return qs.SaveQuery(ctx, query)
 }
 
 func (k Keeper) UpdateLastRemoteHeight(ctx sdk.Context, queryID uint64, newRemoteHeight uint64) error {
-	store := ctx.KVStore(k.storeKey)
+	qs := NewKVQueryStorage(&k)
 
-	bz := store.Get(types.GetRegisteredKVQueryByIDKey(queryID))
-	if bz == nil {
-		return sdkerrors.Wrapf(types.ErrInvalidQueryID, "query with ID %d not found", queryID)
-	}
-
-	var query types.RegisteredKVQuery
-	if err := k.cdc.Unmarshal(bz, &query); err != nil {
-		return sdkerrors.Wrapf(types.ErrProtoUnmarshal, "failed to unmarshal registered query: %v", err)
+	query, err := qs.GetQueryByID(ctx, queryID)
+	if err != nil {
+		return sdkerrors.Wrapf(err, "failed to get query by id: %d", queryID)
 	}
 
 	if query.LastSubmittedResultRemoteHeight >= newRemoteHeight {
@@ -150,32 +95,5 @@ func (k Keeper) UpdateLastRemoteHeight(ctx sdk.Context, queryID uint64, newRemot
 
 	query.LastSubmittedResultRemoteHeight = newRemoteHeight
 	k.Logger(ctx).Debug("Updated last remote height on given query", "queryID", queryID, "new remote height", newRemoteHeight)
-	return k.SaveKVQuery(ctx, query)
-}
-
-func (k Keeper) IterateRegisteredKVQueries(ctx sdk.Context, fn func(index int64, queryInfo types.RegisteredKVQuery) (stop bool)) {
-	store := prefix.NewStore(ctx.KVStore(k.storeKey), types.RegisteredKVQueryKey)
-	iterator := sdk.KVStorePrefixIterator(store, nil)
-	defer iterator.Close()
-
-	i := int64(0)
-	for ; iterator.Valid(); iterator.Next() {
-		query := types.RegisteredKVQuery{}
-		if err := k.cdc.Unmarshal(iterator.Value(), &query); err != nil {
-			continue
-		}
-		stop := fn(i, query)
-
-		if stop {
-			break
-		}
-		i++
-	}
-	k.Logger(ctx).Debug("Iterated over registered queries", "quantity", i)
-}
-
-func (k Keeper) checkRegisteredKVQueryExists(ctx sdk.Context, id uint64) bool {
-	store := ctx.KVStore(k.storeKey)
-
-	return store.Has(types.GetRegisteredKVQueryByIDKey(id))
+	return qs.SaveQuery(ctx, query)
 }

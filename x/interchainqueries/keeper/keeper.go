@@ -62,3 +62,20 @@ func NewKeeper(
 func (k Keeper) Logger(ctx sdk.Context) log.Logger {
 	return ctx.Logger().With("module", fmt.Sprintf("x/%s", types.ModuleName))
 }
+
+// SaveTransactionAsProcessed simply stores a key (SubmittedTxKey + bigEndianBytes(queryID) + tx_hash) with
+// mock data. This key can be used to check whether a certain transaction was already submitted for a specific
+// transaction query.
+func (k Keeper) SaveTransactionAsProcessed(ctx sdk.Context, queryID uint64, txHash []byte) {
+	store := ctx.KVStore(k.storeKey)
+	key := types.GetSubmittedTransactionIDForQueryKey(queryID, txHash)
+
+	store.Set(key, []byte{})
+}
+
+func (k Keeper) CheckTransactionIsAlreadyProcessed(ctx sdk.Context, queryID uint64, txHash []byte) bool {
+	store := ctx.KVStore(k.storeKey)
+	key := types.GetSubmittedTransactionIDForQueryKey(queryID, txHash)
+
+	return store.Has(key)
+}
