@@ -19,7 +19,7 @@ func (k Keeper) EndBlocker(ctx sdk.Context) {
 	qs := NewKVQueryStorage(&k)
 
 	// emit events for periodic queries
-	qs.IterateRegisteredQueries(ctx, func(_ int64, registeredQuery *types.RegisteredKVQuery) (stop bool) {
+	qs.IterateRegisteredQueries(ctx, func(_ int64, registeredQuery types.RegisteredKVQuery) (stop bool) {
 		if uint64(ctx.BlockHeight()) >= registeredQuery.LastEmittedHeight+registeredQuery.UpdatePeriod {
 			k.Logger(ctx).Debug("EnddBlocker: interchainquery event emitted", "id", registeredQuery.Id)
 			event := sdk.NewEvent(

@@ -21,7 +21,7 @@ func (k Keeper) RegisteredKVQuery(goCtx context.Context, request *types.QueryReg
 		return nil, sdkerrors.Wrapf(types.ErrInvalidQueryID, "failed to get registered query by query id: %v", err)
 	}
 
-	return &types.QueryRegisteredKVQueryResponse{RegisteredQuery: registeredQuery}, nil
+	return &types.QueryRegisteredKVQueryResponse{RegisteredQuery: &registeredQuery}, nil
 }
 
 func (k Keeper) RegisteredTXQuery(goCtx context.Context, request *types.QueryRegisteredTXQueryRequest) (*types.QueryRegisteredTXQueryResponse, error) {
@@ -34,7 +34,7 @@ func (k Keeper) RegisteredTXQuery(goCtx context.Context, request *types.QueryReg
 		return nil, sdkerrors.Wrapf(types.ErrInvalidQueryID, "failed to get registered query by query id: %v", err)
 	}
 
-	return &types.QueryRegisteredTXQueryResponse{RegisteredQuery: registeredQuery}, nil
+	return &types.QueryRegisteredTXQueryResponse{RegisteredQuery: &registeredQuery}, nil
 }
 
 func (k Keeper) RegisteredKVQueries(goCtx context.Context, req *types.QueryRegisteredKVQueriesRequest) (*types.QueryRegisteredKVQueriesResponse, error) {
@@ -46,8 +46,8 @@ func (k Keeper) GetRegisteredKVQueries(ctx sdk.Context, _ *types.QueryRegistered
 	qs := NewKVQueryStorage(&k)
 	queries := make([]types.RegisteredKVQuery, 0)
 
-	qs.IterateRegisteredQueries(ctx, func(i int64, registeredQuery *types.RegisteredKVQuery) (stop bool) {
-		queries = append(queries, *registeredQuery)
+	qs.IterateRegisteredQueries(ctx, func(i int64, registeredQuery types.RegisteredKVQuery) (stop bool) {
+		queries = append(queries, registeredQuery)
 		return false
 	})
 
@@ -63,8 +63,8 @@ func (k Keeper) GetRegisteredTXQueries(ctx sdk.Context, _ *types.QueryRegistered
 	qs := NewTXQueryStorage(&k)
 	queries := make([]types.RegisteredTXQuery, 0)
 
-	qs.IterateRegisteredQueries(ctx, func(i int64, registeredQuery *types.RegisteredTXQuery) (stop bool) {
-		queries = append(queries, *registeredQuery)
+	qs.IterateRegisteredQueries(ctx, func(i int64, registeredQuery types.RegisteredTXQuery) (stop bool) {
+		queries = append(queries, registeredQuery)
 		return false
 	})
 

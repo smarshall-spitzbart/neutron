@@ -52,7 +52,7 @@ func (suite *CustomQuerierTestSuite) TestInterchainQueryResult() {
 		LastEmittedHeight: uint64(ctx.BlockHeight()),
 	}
 	qs.SetLastRegisteredQueryID(ctx, lastID)
-	err := qs.SaveQuery(ctx, &registeredQuery)
+	err := qs.SaveQuery(ctx, registeredQuery)
 	suite.Require().NoError(err)
 
 	chainBResp := suite.ChainB.App.Query(abci.RequestQuery{

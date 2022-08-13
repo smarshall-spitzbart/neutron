@@ -59,7 +59,7 @@ func (k msgServer) RegisterInterchainKVQuery(goCtx context.Context, msg *types.M
 	}
 
 	qs.SetLastRegisteredQueryID(ctx, lastID)
-	if err := qs.SaveQuery(ctx, &registeredQuery); err != nil {
+	if err := qs.SaveQuery(ctx, registeredQuery); err != nil {
 		ctx.Logger().Debug("RegisterInterchainKVQuery: failed to save query", "message", &msg, "error", err)
 		return nil, sdkerrors.Wrapf(err, "failed to save query: %v", err)
 	}
@@ -97,7 +97,7 @@ func (k msgServer) RegisterInterchainTXQuery(goCtx context.Context, msg *types.M
 	}
 
 	qs.SetLastRegisteredQueryID(ctx, lastID)
-	if err := qs.SaveQuery(ctx, &registeredQuery); err != nil {
+	if err := qs.SaveQuery(ctx, registeredQuery); err != nil {
 		ctx.Logger().Debug("RegisterInterchainTXQuery: failed to save query", "message", &msg, "error", err)
 		return nil, sdkerrors.Wrapf(err, "failed to save query: %v", err)
 	}
