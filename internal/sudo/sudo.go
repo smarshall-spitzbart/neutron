@@ -73,6 +73,17 @@ type OpenAckDetails struct {
 	CounterpartyVersion   string `json:"counterparty_version"`
 }
 
+// MessageOnChanClose is passed to a contract's sudo() entrypoint when an interchain
+// account was closed.
+type MessageOnChanClose struct {
+	ChanClose ChanCloseDetails `json:"chan_close"`
+}
+
+type ChanCloseDetails struct {
+	PortID    string `json:"port_id"`
+	ChannelID string `json:"channel_id"`
+}
+
 type Handler struct {
 	moduleName string
 	wasmKeeper *wasm.Keeper
@@ -213,6 +224,38 @@ func (s *Handler) SudoOnChanOpenAck(
 	resp, err := s.wasmKeeper.Sudo(ctx, contractAddress, m)
 	if err != nil {
 		s.Logger(ctx).Debug("SudoOnChanOpenAck: failed to Sudo",
+			"error", err, "contract_address", contractAddress)
+		return nil, fmt.Errorf("failed to Sudo: %v", err)
+	}
+
+	return resp, nil
+}
+
+func (s *Handler) SudoOnChanClose(
+	ctx sdk.Context,
+	contractAddress sdk.AccAddress,
+	details ChanCloseDetails,
+) ([]byte, error) {
+	s.Logger(ctx).Debug("SudoOnChanClose", "contractAddress", contractAddress)
+
+	if !s.wasmKeeper.HasContractInfo(ctx, contractAddress) {
+		s.Logger(ctx).Debug("SudoOnChanClose: contract not found", "contractAddress", contractAddress)
+		return nil, fmt.Errorf("%s is not a contract address", contractAddress)
+	}
+
+	x := MessageOnChanClose{}
+	x.ChanClose = details
+	m, err := json.Marshal(x)
+	if err != nil {
+		s.Logger(ctx).Error("SudoOnChanClose: failed to marshal MessageOnChanClose message",
+			"error", err, "contract_address", contractAddress)
+		return nil, fmt.Errorf("failed to marshal MessageOnChanClose: %v", err)
+	}
+	s.Logger(ctx).Info("SudoOnChanClose sending request", "data", string(m))
+
+	resp, err := s.wasmKeeper.Sudo(ctx, contractAddress, m)
+	if err != nil {
+		s.Logger(ctx).Debug("SudoOnChanClose: failed to Sudo",
 			"error", err, "contract_address", contractAddress)
 		return nil, fmt.Errorf("failed to Sudo: %v", err)
 	}

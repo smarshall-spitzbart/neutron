@@ -23,6 +23,7 @@ const (
 	LabelSubmitTx                  = "submit_tx"
 	LabelHandleAcknowledgment      = "handle_ack"
 	LabelLabelHandleChanOpenAck    = "handle_chan_open_ack"
+	LabelLabelHandleChanClose      = "handle_chan_close"
 	LabelRegisterInterchainAccount = "register_interchain_account"
 	LabelHandleTimeout             = "handle_timeout"
 )

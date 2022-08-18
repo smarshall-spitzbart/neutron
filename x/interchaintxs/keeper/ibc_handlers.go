@@ -99,3 +99,31 @@ func (k *Keeper) HandleChanOpenAck(
 
 	return nil
 }
+
+// HandleChanClose passes the data about a closed channel to the appropriate contract
+// (== the data about a closed interchain account).
+func (k *Keeper) HandleChanClose(
+	ctx sdk.Context,
+	portID,
+	channelID string,
+) error {
+	defer telemetry.ModuleMeasureSince(types.ModuleName, time.Now(), LabelLabelHandleChanClose)
+
+	k.Logger(ctx).Debug("HandleChanClose", "port_id", portID, "channel_id", channelID)
+	icaOwner, err := types.ICAOwnerFromPort(portID)
+	if err != nil {
+		k.Logger(ctx).Error("HandleChanClose: failed to get ica owner from source port", "error", err)
+		return sdkerrors.Wrap(err, "failed to get ica owner from port")
+	}
+
+	_, err = k.sudoHandler.SudoOnChanClose(ctx, icaOwner.GetContract(), sudo.ChanCloseDetails{
+		PortID:    portID,
+		ChannelID: channelID,
+	})
+	if err != nil {
+		k.Logger(ctx).Error("HandleChanClose: failed to Sudo contract on packet timeout", "error", err)
+		return sdkerrors.Wrap(err, "failed to Sudo the contract OnChanClose")
+	}
+
+	return nil
+}
