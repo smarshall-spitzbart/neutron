@@ -81,7 +81,7 @@ func (im IBCModule) OnChanCloseInit(
 	portID,
 	channelID string,
 ) error {
-	return nil
+	return im.keeper.HandleChanClose(ctx, portID, channelID)
 }
 
 // OnChanCloseConfirm implements the IBCModule interface. We don't need to implement this handler.
