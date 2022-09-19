@@ -40,7 +40,7 @@ func GetQueryCmd(queryRoute string) *cobra.Command {
 func CmdQueryRegisteredQuery() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "registered-query [id]",
-		Short: "queries all the interchain queries in the module",
+		Short: "queries registered interchain query by id",
 		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
@@ -68,7 +68,7 @@ func CmdQueryRegisteredQuery() *cobra.Command {
 func CmdQueryRegisteredQueries() *cobra.Command {
 	cmd := &cobra.Command{
 		Use:   "registered-queries",
-		Short: "queries all the interchain queries in the module",
+		Short: "queries registered interchain queries in the module with filtration by owner and/or connection id",
 		Args:  cobra.NoArgs,
 		RunE: func(cmd *cobra.Command, args []string) error {
 			clientCtx := client.GetClientContextFromCmd(cmd)
