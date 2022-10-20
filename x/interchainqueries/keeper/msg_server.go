@@ -246,7 +246,7 @@ func (k msgServer) SubmitQueryResult(goCtx context.Context, msg *types.MsgSubmit
 		}
 
 		if err = k.SaveKVQueryResult(ctx, msg.QueryId, msg.Result); err != nil {
-			ctx.Logger().Error("SubmitQueryResult: failed to SaveKVQueryResult",
+			ctx.Logger().Debug("SubmitQueryResult: failed to SaveKVQueryResult",
 				"error", err, "query", query, "message", msg)
 			return nil, sdkerrors.Wrapf(err, "failed to SaveKVQueryResult: %v", err)
 		}
