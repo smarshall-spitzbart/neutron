@@ -4,10 +4,12 @@ import (
 	"context"
 	"testing"
 
+	keepertest "github.com/neutron-org/neutron/testutil/tokendistribution/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
-    "github.com/neutron-org/neutron/x/tokendistribution/types"
-    "github.com/neutron-org/neutron/x/tokendistribution/keeper"
-    keepertest "github.com/neutron-org/neutron/testutil/keeper"
+
+	"github.com/neutron-org/neutron/x/tokendistribution/keeper"
+	"github.com/neutron-org/neutron/x/tokendistribution/types"
 )
 
 func setupMsgServer(t testing.TB) (types.MsgServer, context.Context) {

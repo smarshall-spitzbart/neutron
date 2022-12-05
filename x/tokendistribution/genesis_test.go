@@ -3,17 +3,19 @@ package tokendistribution_test
 import (
 	"testing"
 
-	keepertest "github.com/neutron-org/neutron/testutil/keeper"
-	"github.com/neutron-org/neutron/testutil/nullify"
+	keepertest "github.com/neutron-org/neutron/testutil/tokendistribution/keeper"
+
+	"github.com/stretchr/testify/require"
+
+	"github.com/neutron-org/neutron/testutil/tokendistribution/nullify"
 	"github.com/neutron-org/neutron/x/tokendistribution"
 	"github.com/neutron-org/neutron/x/tokendistribution/types"
-	"github.com/stretchr/testify/require"
 )
 
 func TestGenesis(t *testing.T) {
 	genesisState := types.GenesisState{
-		Params:	types.DefaultParams(),
-		
+		Params: types.DefaultParams(),
+
 		// this line is used by starport scaffolding # genesis/test/state
 	}
 
@@ -24,8 +26,6 @@ func TestGenesis(t *testing.T) {
 
 	nullify.Fill(&genesisState)
 	nullify.Fill(got)
-
-	
 
 	// this line is used by starport scaffolding # genesis/test/assert
 }

@@ -2,7 +2,7 @@ syntax = "proto3";
 package neutronorg.neutron.tokendistribution;
 
 import "gogoproto/gogo.proto";
-import "tokendistribution/params.proto";
+import "neutron/tokendistribution/params.proto";
 // this line is used by starport scaffolding # genesis/proto/import
 
 option go_package = "github.com/neutron-org/neutron/x/tokendistribution/types";

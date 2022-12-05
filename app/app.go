@@ -9,6 +9,10 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/neutron-org/neutron/x/tokendistribution"
+	tokendistributionkeeper "github.com/neutron-org/neutron/x/tokendistribution/keeper"
+	tokendistributiontypes "github.com/neutron-org/neutron/x/tokendistribution/types"
+
 	"github.com/CosmWasm/wasmd/x/wasm"
 	wasmkeeper "github.com/CosmWasm/wasmd/x/wasm/keeper"
 	"github.com/cosmos/cosmos-sdk/baseapp"
@@ -259,6 +263,7 @@ type App struct {
 	FeeGrantKeeper      feegrantkeeper.Keeper
 	FeeKeeper           *feekeeper.Keeper
 	ConsumerKeeper      ccvconsumerkeeper.Keeper
+	DistributionKeeper  tokendistributionkeeper.Keeper
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper         capabilitykeeper.ScopedKeeper
@@ -505,6 +510,14 @@ func New(
 		wasmOpts...,
 	)
 
+	app.DistributionKeeper = *tokendistributionkeeper.NewKeeper(
+		appCodec,
+		keys[tokendistributiontypes.StoreKey],
+		memKeys[tokendistributiontypes.MemStoreKey],
+		app.GetSubspace(tokendistributiontypes.ModuleName),
+		app.BankKeeper,
+	)
+
 	transferIBCModule := transferSudo.NewIBCModule(app.TransferKeeper)
 
 	// Create static IBC router, add transfer route, then set and seal it
@@ -518,6 +531,7 @@ func New(
 	interchainQueriesModule := interchainqueries.NewAppModule(appCodec, app.InterchainQueriesKeeper, app.AccountKeeper, app.BankKeeper)
 	interchainTxsModule := interchaintxs.NewAppModule(appCodec, app.InterchainTxsKeeper, app.AccountKeeper, app.BankKeeper)
 	contractManagerModule := contractmanager.NewAppModule(appCodec, app.ContractManagerKeeper)
+	tokenDistributionModule := tokendistribution.NewAppModule(appCodec, app.DistributionKeeper, app.AccountKeeper, app.BankKeeper)
 
 	ibcRouter.AddRoute(icacontrollertypes.SubModuleName, icaControllerIBCModule).
 		AddRoute(icahosttypes.SubModuleName, icaHostIBCModule).
@@ -557,6 +571,7 @@ func New(
 		interchainTxsModule,
 		feeModule,
 		contractManagerModule,
+		tokenDistributionModule,
 		adminModule,
 	)
 
@@ -579,6 +594,8 @@ func New(
 		feegrant.ModuleName,
 		paramstypes.ModuleName,
 		ccvconsumertypes.ModuleName,
+		// TODO: figure out the exact position of DistributionModule
+		tokendistributiontypes.ModuleName,
 		icatypes.ModuleName,
 		interchainqueriesmoduletypes.ModuleName,
 		interchaintxstypes.ModuleName,
@@ -603,6 +620,8 @@ func New(
 		ibchost.ModuleName,
 		ibctransfertypes.ModuleName,
 		ccvconsumertypes.ModuleName,
+		// TODO: figure out the exact position of DistributionModule
+		tokendistributiontypes.ModuleName,
 		icatypes.ModuleName,
 		interchainqueriesmoduletypes.ModuleName,
 		interchaintxstypes.ModuleName,
@@ -632,6 +651,7 @@ func New(
 		upgradetypes.ModuleName,
 		feegrant.ModuleName,
 		ccvconsumertypes.ModuleName,
+		tokendistributiontypes.ModuleName,
 		icatypes.ModuleName,
 		interchainqueriesmoduletypes.ModuleName,
 		interchaintxstypes.ModuleName,
@@ -660,6 +680,7 @@ func New(
 		transferModule,
 		interchainQueriesModule,
 		interchainTxsModule,
+		tokenDistributionModule,
 	)
 	app.sm.RegisterStoreDecoders()
 

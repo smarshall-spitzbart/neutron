@@ -4,12 +4,14 @@ import (
 	"testing"
 
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
-	testutil_keeper "github.com/neutron-org/neutron/testutil/keeper"
 	"github.com/pkg/errors"
 
+	testutil_keeper "github.com/neutron-org/neutron/testutil/keeper"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	"github.com/neutron-org/neutron/x/feerefunder/types"
 	"github.com/stretchr/testify/require"
+
+	"github.com/neutron-org/neutron/x/feerefunder/types"
 )
 
 func TestKeeperCheckFees(t *testing.T) {

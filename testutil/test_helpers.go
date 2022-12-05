@@ -25,9 +25,10 @@ import (
 	e2e "github.com/cosmos/interchain-security/testutil/e2e"
 	ccv "github.com/cosmos/interchain-security/x/ccv/types"
 	"github.com/cosmos/interchain-security/x/ccv/utils"
+	tmtypes "github.com/tendermint/tendermint/types"
+
 	"github.com/neutron-org/neutron/app"
 	ictxstypes "github.com/neutron-org/neutron/x/interchaintxs/types"
-	tmtypes "github.com/tendermint/tendermint/types"
 )
 
 var (
