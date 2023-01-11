@@ -1,8 +1,9 @@
 package cli_test
 
 import (
-	"github.com/neutron-org/neutron/app"
 	"testing"
+
+	"github.com/neutron-org/neutron/app"
 
 	clitestutil "github.com/cosmos/cosmos-sdk/testutil/cli"
 	sdk "github.com/cosmos/cosmos-sdk/types"

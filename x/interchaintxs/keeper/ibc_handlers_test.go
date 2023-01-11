@@ -2,6 +2,8 @@ package keeper_test
 
 import (
 	"fmt"
+	"testing"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	icatypes "github.com/cosmos/ibc-go/v3/modules/apps/27-interchain-accounts/types"
 	channeltypes "github.com/cosmos/ibc-go/v3/modules/core/04-channel/types"
@@ -13,7 +15,6 @@ import (
 	feetypes "github.com/neutron-org/neutron/x/feerefunder/types"
 	"github.com/neutron-org/neutron/x/interchaintxs/keeper"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 func TestHandleAcknowledgement(t *testing.T) {

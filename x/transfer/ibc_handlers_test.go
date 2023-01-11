@@ -2,6 +2,8 @@ package transfer_test
 
 import (
 	"fmt"
+	"testing"
+
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
 	transfertypes "github.com/cosmos/ibc-go/v3/modules/apps/transfer/types"
@@ -15,7 +17,6 @@ import (
 	ictxtypes "github.com/neutron-org/neutron/x/interchaintxs/types"
 	"github.com/neutron-org/neutron/x/transfer"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
 const TestCosmosAddress = "cosmos10h9stc5v6ntgeygf5xf945njqq5h32r53uquvw"
@@ -100,7 +101,7 @@ func TestHandleAcknowledgement(t *testing.T) {
 	cmKeeper.EXPECT().SudoError(gomock.AssignableToTypeOf(ctx), contractAddress, p, errACK.GetError()).Return(nil, fmt.Errorf("SudoError error"))
 	cmKeeper.EXPECT().AddContractFailure(ctx, contractAddress.String(), p.GetSequence(), "ack")
 	cmKeeper.EXPECT().HasContractInfo(ctx, sdk.MustAccAddressFromBech32(testutil.TestOwnerAddress)).Return(false)
-	//feeKeeper.EXPECT().DistributeAcknowledgementFee(ctx, relayerAddress, feetypes.NewPacketID(p.SourcePort, p.SourceChannel, p.Sequence))
+	// feeKeeper.EXPECT().DistributeAcknowledgementFee(ctx, relayerAddress, feetypes.NewPacketID(p.SourcePort, p.SourceChannel, p.Sequence))
 	err = txModule.HandleAcknowledgement(ctx, p, errAckData, relayerAddress)
 	require.NoError(t, err)
 
@@ -131,7 +132,7 @@ func TestHandleAcknowledgement(t *testing.T) {
 	}).Return(nil, fmt.Errorf("SudoError error"))
 	cmKeeper.EXPECT().AddContractFailure(ctx, contractAddress.String(), p.GetSequence(), "ack")
 	// FIXME: fix distribution during outofgas
-	//cmKeeper.EXPECT().HasContractInfo(ctx, sdk.MustAccAddressFromBech32(testutil.TestOwnerAddress)).Return(false)
+	// cmKeeper.EXPECT().HasContractInfo(ctx, sdk.MustAccAddressFromBech32(testutil.TestOwnerAddress)).Return(false)
 	err = txModule.HandleAcknowledgement(ctx, p, errAckData, relayerAddress)
 	require.NoError(t, err)
 
@@ -141,7 +142,7 @@ func TestHandleAcknowledgement(t *testing.T) {
 	}).Return(nil, fmt.Errorf("SudoError error"))
 	cmKeeper.EXPECT().AddContractFailure(ctx, contractAddress.String(), p.GetSequence(), "ack")
 	// FIXME: fix distribution during outofgas
-	//cmKeeper.EXPECT().HasContractInfo(ctx, sdk.MustAccAddressFromBech32(testutil.TestOwnerAddress)).Return(true)
+	// cmKeeper.EXPECT().HasContractInfo(ctx, sdk.MustAccAddressFromBech32(testutil.TestOwnerAddress)).Return(true)
 	// feeKeeper.EXPECT().DistributeAcknowledgementFee(ctx, relayerAddress, feetypes.NewPacketID(p.SourcePort, p.SourceChannel, p.Sequence))
 	err = txModule.HandleAcknowledgement(ctx, p, errAckData, relayerAddress)
 	require.NoError(t, err)
@@ -158,7 +159,7 @@ func TestHandleAcknowledgement(t *testing.T) {
 		cachedCtx.GasMeter().ConsumeGas(1_000_000, "Sudo response consumption")
 	}).Return(nil, nil)
 	cmKeeper.EXPECT().HasContractInfo(ctx, sdk.MustAccAddressFromBech32(testutil.TestOwnerAddress)).Return(false)
-	//feeKeeper.EXPECT().DistributeAcknowledgementFee(ctx, relayerAddress, feetypes.NewPacketID(p.SourcePort, p.SourceChannel, p.Sequence))
+	// feeKeeper.EXPECT().DistributeAcknowledgementFee(ctx, relayerAddress, feetypes.NewPacketID(p.SourcePort, p.SourceChannel, p.Sequence))
 	consumedBefore := ctx.GasMeter().GasConsumed()
 	err = txModule.HandleAcknowledgement(ctx, p, resAckData, relayerAddress)
 	require.NoError(t, err)
@@ -290,7 +291,7 @@ func TestHandleTimeout(t *testing.T) {
 		ctx.GasMeter().ConsumeGas(ctx.GasMeter().Limit()+1, "out of gas test")
 	}).Return(nil, fmt.Errorf("SudoTimeout error"))
 	cmKeeper.EXPECT().AddContractFailure(ctx, contractAddress.String(), p.GetSequence(), "timeout")
-	//cmKeeper.EXPECT().HasContractInfo(ctx, sdk.MustAccAddressFromBech32(testutil.TestOwnerAddress)).Return(false)
+	// cmKeeper.EXPECT().HasContractInfo(ctx, sdk.MustAccAddressFromBech32(testutil.TestOwnerAddress)).Return(false)
 	err = txModule.HandleTimeout(ctx, p, relayerAddress)
 	require.NoError(t, err)
 
@@ -300,8 +301,8 @@ func TestHandleTimeout(t *testing.T) {
 	}).Return(nil, fmt.Errorf("SudoTimeout error"))
 	cmKeeper.EXPECT().AddContractFailure(ctx, contractAddress.String(), p.GetSequence(), "timeout")
 	// FIXME: make DistributeTimeoutFee during out of gas
-	//cmKeeper.EXPECT().HasContractInfo(ctx, sdk.MustAccAddressFromBech32(testutil.TestOwnerAddress)).Return(true)
-	//feeKeeper.EXPECT().DistributeTimeoutFee(ctx, relayerAddress, feetypes.NewPacketID(p.SourcePort, p.SourceChannel, p.Sequence))
+	// cmKeeper.EXPECT().HasContractInfo(ctx, sdk.MustAccAddressFromBech32(testutil.TestOwnerAddress)).Return(true)
+	// feeKeeper.EXPECT().DistributeTimeoutFee(ctx, relayerAddress, feetypes.NewPacketID(p.SourcePort, p.SourceChannel, p.Sequence))
 	err = txModule.HandleTimeout(ctx, p, relayerAddress)
 	require.NoError(t, err)
 }
